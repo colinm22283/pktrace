@@ -10,7 +10,7 @@
 FixedString::FixedString() : length(0), chars(new char[1])
 {
     chars[0] = 0x00;
-};
+}
 FixedString::FixedString(unsigned int _length) : length(_length), chars(new char[_length + 1])
 {
     chars[length] = 0x00;

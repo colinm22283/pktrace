@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <cmath>
 #include <iostream>
 
 #include "render/color.h"

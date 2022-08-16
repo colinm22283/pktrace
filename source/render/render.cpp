@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
-#include <iostream>
 
 #include <config.h>
 
@@ -9,7 +8,6 @@
 #include "render/render.h"
 #include "engine.h"
 #include "render/color.h"
-#include "render/font.h"
 
 #include "misc/minMax.h"
 

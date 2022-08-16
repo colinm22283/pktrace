@@ -1,4 +1,4 @@
-#include "input.h"
+#include <input.h>
 
 bool Input::mouseLeft = false;
 bool Input::mouseMiddle = false;

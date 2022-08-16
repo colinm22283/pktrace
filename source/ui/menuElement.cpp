@@ -6,11 +6,11 @@
 
 #pragma region Menu Element
 
-MenuElement::MenuElement() { type = menuElementType::NONE; };
+MenuElement::MenuElement() { type = menuElementType::NONE; }
 menuElementType MenuElement::getType() { return type; }
 
-int MenuElement::w() { return 0; };
-int MenuElement::h() { return 0; };
+int MenuElement::w() { return 0; }
+int MenuElement::h() { return 0; }
 
 #pragma endregion
 

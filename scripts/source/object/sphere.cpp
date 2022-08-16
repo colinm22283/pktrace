@@ -1,6 +1,4 @@
 #include <cmath>
-#include <iostream>
-#include <thread>
 
 #include <misc/minMax.h>
 

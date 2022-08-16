@@ -1,5 +1,4 @@
 #include <string>
-#include <map>
 #include <iostream>
 #include <SDL.h>
 

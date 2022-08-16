@@ -1,5 +1,3 @@
-#include <config.h>
-
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -9,8 +7,6 @@
 
 #include <misc/list.h>
 
-#include <audio/audio.h>
-#include <audio/synth.h>
 #include <audio/midi.h>
 
 unsigned int readUVariableLength(std::ifstream* file)
@@ -123,7 +119,7 @@ MIDI::MIDI(const char* path)
 
                         char* name = new char[length];
 
-                        for (unsigned int i = 0; i < length; i++) name[i] = readUInt8(&file);
+                        for (unsigned int j = 0; j < length; j++) name[j] = readUInt8(&file);
 
                         debugPrint("    Name: " << name);
 
@@ -153,7 +149,7 @@ MIDI::MIDI(const char* path)
                 unsigned char status = readUInt8(&file);
 
                 unsigned char event = status & 0xF0;
-                unsigned char channel = status & 0x0F;
+//                unsigned char channel = status & 0x0F;
 
                 switch (event)
                 {

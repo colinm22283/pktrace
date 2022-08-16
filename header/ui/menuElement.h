@@ -14,8 +14,8 @@ public:
 
     int x;
     int y;
-    int w();
-    int h();
+    virtual int w();
+    virtual int h();
 
     menuElementType getType();
 

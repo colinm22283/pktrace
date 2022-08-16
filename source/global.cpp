@@ -1,4 +1,4 @@
-#include "global.h"
+#include <global.h>
 
 bool Global::fpsOutput = false;
 bool Global::printKeys = false;
