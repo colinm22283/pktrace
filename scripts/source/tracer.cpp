@@ -148,13 +148,13 @@ void tracerThread()
 
             for (unsigned int i = 0; i < World::lightCount; i++)
             {
-                vector3 lightDir = World::lights[i].position - res.position;
-                collisionResult lightRes = World::raycast({ res.position + (lightDir * 0.001f), lightDir });
+                vector3 lightDir = normalize(World::lights[i].position - res.position);
+                collisionResult lightRes = World::raycast({ res.position + (lightDir * 0.1f), lightDir });
 
-                if (!lightRes.hit) c += 150 * World::lights[0].intensityAt(res.position);
+                if (!lightRes.hit) c += 150;
             }
 
-            Tracer::pixelBuf[inst.x][inst.y] = GS((uint8_t) CLAMP(
+            Tracer::pixelBuf[inst.x][inst.y] = GS((uint8_t)CLAMP(
                     AMBIENT_LIGHT + c,
                     0, 255
             ));

@@ -19,9 +19,11 @@ struct vector3
     vector3 operator+(vector3 v);
     vector3 operator-(vector3 v);
     vector3 operator*(float x);
+    vector3 operator/(float x);
 };
 
 float transformedDotProd(vector3 a, vector3 b);
 float dotProd(vector3 a, vector3 b);
 float magnitude(vector3 v);
+vector3 normalize(vector3 v);
 vector3 vecMultiply(vector3 a, vector3 b);

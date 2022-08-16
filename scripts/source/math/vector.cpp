@@ -15,6 +15,10 @@ vector3 vector3::operator*(float _)
 {
     return VECTOR3(x * _, y * _, z * _);
 }
+vector3 vector3::operator/(float _)
+{
+    return VECTOR3(x / _, y / _, z / _);
+}
 
 float transformedDotProd(vector3 a, vector3 b)
 {
@@ -33,6 +37,11 @@ float magnitude(vector3 v)
         powf32(v.y, 2) +
         powf32(v.z, 2)
     );
+}
+
+vector3 normalize(vector3 v)
+{
+    return v / magnitude(v);
 }
 
 vector3 vecMultiply(vector3 a, vector3 b)

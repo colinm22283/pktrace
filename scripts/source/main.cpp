@@ -19,22 +19,27 @@ void Script::start()
 
     Engine::resizeWindow(800, 800);
 
-    World::objectCount = 3;
+    World::objectCount = 7;
     World::objects = new Object*[]
     {
-            (Object*)new Sphere(3, VECTOR3(0, 0, 0)),
-            (Object*)new Sphere(2, VECTOR3(1, 6, 0)),
-            (Object*)new Sphere(1, VECTOR3(3, 10, 0))
+            (Object*)new Sphere(3, VECTOR3(4, 0, 0)), // center sphere
+            (Object*)new Sphere(1000, VECTOR3(0, -1020, 0)), // floor
+            (Object*)new Sphere(500, VECTOR3(0, 1020, 0)), // ceiling
+            (Object*)new Sphere(500, VECTOR3(0, 0, 1020)), // back wall
+            (Object*)new Sphere(500, VECTOR3(0, 0, -1020)), // front wall
+            (Object*)new Sphere(500, VECTOR3(-1020, 0, 0)), // left wall
+            (Object*)new Sphere(500, VECTOR3(1020, 0, 0)), // right wall
+            (Object*)new Sphere(1, VECTOR3(5, 0, 0)) // right wall
     };
     World::lightCount = 1;
     World::lights = new Light[]
     {
-        Light(200, VECTOR3(5, 20, 5)),
+        Light(200, VECTOR3(0, 0, 0)),
         Light(200, VECTOR3(-5, -10, -5))
     };
 
-    Camera::position = VECTOR3(0, 11, -10);
-    Camera::rotation = VECTOR3(RADIANS(-70), 0, 0);
+    Camera::position = VECTOR3(0, 6, -6);
+    Camera::rotation = VECTOR3(RADIANS(-45.0f), 0, 0);
 
     Tracer::init();
 }
@@ -57,8 +62,8 @@ void Script::keyUp(SDL_Keysym keysym)
     {
         Camera::rotation.y += 0.5f;
 
-        Camera::position.x = sin(-Camera::rotation.y) * 10;
-        Camera::position.z = -cos(-Camera::rotation.y) * 10;
+        Camera::position.x = sin(-Camera::rotation.y) * 6;
+        Camera::position.z = -cos(-Camera::rotation.y) * 6;
 
         new std::thread(Tracer::update);
     }

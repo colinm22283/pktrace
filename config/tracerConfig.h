@@ -12,4 +12,4 @@
 #define SKYBOX_COLOR RGB(0, 250, 250)
 #define AMBIENT_LIGHT 60
 
-#define FOV RADIANS(120.0f)
+#define FOV RADIANS(90.0f)
