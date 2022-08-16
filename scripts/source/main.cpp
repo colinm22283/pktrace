@@ -51,15 +51,12 @@ void Script::update()
     {
         Tracer::draw();
 
-        if (Input::mouseLeft)
-        {
-            Camera::rotation.y += 0.5f;
+        Camera::rotation.y += 0.5f;
 
-            Camera::position.x = sin(-Camera::rotation.y) * 15;
-            Camera::position.z = -cos(-Camera::rotation.y) * 10;
+        Camera::position.x = sin(-Camera::rotation.y) * 10;
+        Camera::position.z = -cos(-Camera::rotation.y) * 10;
 
-            new std::thread(Tracer::update);
-        }
+        new std::thread(Tracer::update);
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(PREVIEW_INTERVAL));
