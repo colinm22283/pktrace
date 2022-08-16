@@ -24,10 +24,11 @@ void Script::start()
 
     Engine::resizeWindow(800, 800);
 
-    World::objectCount = 2;
+    World::objectCount = 3;
     World::objects = new Object*[]
     {
             (Object*)new Sphere(3, VECTOR3(0, 0, 0)),
+            (Object*)new Sphere(2, VECTOR3(0, 5, 0)),
             (Object*)new Sphere(2, VECTOR3(0, 5, 0))
     };
     World::lightCount = 1;
@@ -62,4 +63,7 @@ void Script::update()
     std::this_thread::sleep_for(std::chrono::milliseconds(PREVIEW_INTERVAL));
 }
 
-void Script::exit() { }
+void Script::exit()
+{
+
+}

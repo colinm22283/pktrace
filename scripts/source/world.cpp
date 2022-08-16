@@ -5,6 +5,14 @@ Object** World::objects;
 unsigned int World::lightCount;
 Light* World::lights;
 
+void World::cleanup()
+{
+    for (unsigned int i = 0; i < World::objectCount; i++) delete World::objects[i];
+    delete[] World::objects;
+
+    delete[] World::lights;
+}
+
 collisionResult World::raycast(ray r)
 {
     collisionResult res = World::objects[0]->checkCollision(r);

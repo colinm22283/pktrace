@@ -10,5 +10,7 @@ namespace World
     extern unsigned int lightCount;
     extern Light* lights;
 
+    void cleanup();
+
     collisionResult raycast(ray r);
 }
