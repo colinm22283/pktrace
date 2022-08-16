@@ -10,5 +10,6 @@
 #define ERASE_PREVIOUS_FRAME 1
 
 #define SKYBOX_COLOR RGB(0, 250, 250)
+#define AMBIENT_LIGHT 60
 
 #define FOV RADIANS(120.0f)

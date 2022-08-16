@@ -4,10 +4,6 @@
 #include <script.h>
 #include <global.h>
 #include <engine.h>
-#include <input.h>
-
-#include <render/render.h>
-#include <render/font.h>
 
 #include <tracer.h>
 #include <world.h>
@@ -15,12 +11,11 @@
 
 #include <object/sphere.h>
 
-#define PREVIEW_INTERVAL 100
+bool keyDown = false;
 
 void Script::start()
 {
-    Global::fpsLimit = 100000;
-//    Global::fpsOutput = true;
+    Global::fpsLimit = 100;
 
     Engine::resizeWindow(800, 800);
 
@@ -28,17 +23,18 @@ void Script::start()
     World::objects = new Object*[]
     {
             (Object*)new Sphere(3, VECTOR3(0, 0, 0)),
-            (Object*)new Sphere(2, VECTOR3(0, 5, 0)),
-            (Object*)new Sphere(2, VECTOR3(0, 5, 0))
+            (Object*)new Sphere(2, VECTOR3(1, 6, 0)),
+            (Object*)new Sphere(1, VECTOR3(3, 10, 0))
     };
     World::lightCount = 1;
     World::lights = new Light[]
     {
-        Light(400, VECTOR3(5, 20, 5))
+        Light(200, VECTOR3(5, 20, 5)),
+        Light(200, VECTOR3(-5, -10, -5))
     };
 
-    Camera::position = VECTOR3(0, 0, -10);
-    Camera::rotation = VECTOR3(0, 0, 0);
+    Camera::position = VECTOR3(0, 11, -10);
+    Camera::rotation = VECTOR3(RADIANS(-70), 0, 0);
 
     Tracer::init();
 }
@@ -48,10 +44,17 @@ void Script::update()
     Tracer::draw();
 
     if (!Tracer::ready) Tracer::drawProgress();
-    else
-    {
-        Tracer::draw();
+}
 
+void Script::exit()
+{
+    World::cleanup();
+}
+
+void Script::keyUp(SDL_Keysym keysym)
+{
+    if (Tracer::ready)
+    {
         Camera::rotation.y += 0.5f;
 
         Camera::position.x = sin(-Camera::rotation.y) * 10;
@@ -59,11 +62,4 @@ void Script::update()
 
         new std::thread(Tracer::update);
     }
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(PREVIEW_INTERVAL));
-}
-
-void Script::exit()
-{
-
 }

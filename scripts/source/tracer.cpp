@@ -142,22 +142,25 @@ void tracerThread()
 
         collisionResult res = World::raycast(r);
 
-        vector3 lightDir = World::lights[0].position - res.position;
-        collisionResult lightRes = World::raycast({ res.position + (lightDir * 0.001f), lightDir });
-
         if (res.hit)
         {
-            if (!lightRes.hit) Tracer::pixelBuf[inst.x][inst.y] = GS((uint8_t) CLAMP(
-                150 * World::lights[0].intensityAt(res.position),
-                0, 255
-            ));
-            else Tracer::pixelBuf[inst.x][inst.y] = GS((uint8_t) CLAMP(
-                0,
-                0, 255
+            float c = 0;
+
+            for (unsigned int i = 0; i < World::lightCount; i++)
+            {
+                vector3 lightDir = World::lights[i].position - res.position;
+                collisionResult lightRes = World::raycast({ res.position + (lightDir * 0.001f), lightDir });
+
+                if (!lightRes.hit) c += 150 * World::lights[0].intensityAt(res.position);
+            }
+
+            Tracer::pixelBuf[inst.x][inst.y] = GS((uint8_t) CLAMP(
+                    AMBIENT_LIGHT + c,
+                    0, 255
             ));
         }
         else Tracer::pixelBuf[inst.x][inst.y] = SKYBOX_COLOR;
 
-//        for (unsigned int i = 0; i < 500000; i++);
+//        for (unsigned int i = 0; i < 100000; i++);
     }
 }

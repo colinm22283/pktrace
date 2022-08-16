@@ -45,6 +45,8 @@ void Event::update()
             if (Script::keyDown) Script::keyDown(event.key.keysym);
             if (Global::printKeys) Console::print("Key: " + std::to_string(event.key.keysym.sym));
             break;
+        case SDL_KEYUP:
+            if (Script::keyUp) Script::keyUp(event.key.keysym);
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&Input::mouseX, &Input::mouseY);
             break;
