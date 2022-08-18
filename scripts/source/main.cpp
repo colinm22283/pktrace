@@ -22,24 +22,23 @@ void Script::start()
     World::objectCount = 7;
     World::objects = new Object*[]
     {
-            (Object*)new Sphere(3, VECTOR3(4, 0, 0)), // center sphere
-            (Object*)new Sphere(1000, VECTOR3(0, -1020, 0)), // floor
-            (Object*)new Sphere(500, VECTOR3(0, 1020, 0)), // ceiling
-            (Object*)new Sphere(500, VECTOR3(0, 0, 1020)), // back wall
-            (Object*)new Sphere(500, VECTOR3(0, 0, -1020)), // front wall
-            (Object*)new Sphere(500, VECTOR3(-1020, 0, 0)), // left wall
-            (Object*)new Sphere(500, VECTOR3(1020, 0, 0)), // right wall
-            (Object*)new Sphere(1, VECTOR3(5, 0, 0)) // right wall
+            (Object*)new Sphere(2, VECTOR3(0, 0, 0)),        // center sphere
+            (Object*)new Sphere(10000, VECTOR3(0, -10020, 0)), // floor
+            (Object*)new Sphere(10000, VECTOR3(0, 10020, 0)),   // ceiling
+            (Object*)new Sphere(10000, VECTOR3(0, 0, 10020)),   // back wall
+            (Object*)new Sphere(10000, VECTOR3(0, 0, -10020)),  // front wall
+            (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0)),  // left wall
+            (Object*)new Sphere(10000, VECTOR3(10020, 0, 0))    // right wall
     };
-    World::lightCount = 1;
+    World::lightCount = 2;
     World::lights = new Light[]
     {
-        Light(200, VECTOR3(0, 0, 0)),
-        Light(200, VECTOR3(-5, -10, -5))
+        Light(1000, VECTOR3(18, 18, 18)),
+        Light(1000, VECTOR3(-18, 18, -18))
     };
 
-    Camera::position = VECTOR3(0, 6, -6);
-    Camera::rotation = VECTOR3(RADIANS(-45.0f), 0, 0);
+    Camera::position = VECTOR3(0, 0, -6);
+    Camera::rotation = VECTOR3(RADIANS(0.0f), 0, 0);
 
     Tracer::init();
 }
@@ -60,7 +59,7 @@ void Script::keyUp(SDL_Keysym keysym)
 {
     if (Tracer::ready)
     {
-        Camera::rotation.y += 0.5f;
+        Camera::rotation.y += 0.1f;
 
         Camera::position.x = sin(-Camera::rotation.y) * 6;
         Camera::position.z = -cos(-Camera::rotation.y) * 6;

@@ -12,5 +12,6 @@ public:
     float intensity;
     vector3 position;
 
+    virtual float intensityAt(float distance);
     virtual float intensityAt(vector3 pos);
 };

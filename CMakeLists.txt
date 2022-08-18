@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_MODULE_PATH /usr/share/cmake-3.22/Modules)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/)
+
 message(STATUS ${CMAKE_MODULE_PATH})
 
 find_package(SDL2 REQUIRED)
@@ -22,6 +24,6 @@ include_directories("${PROJECT_SOURCE_DIR}/config/")
 
 file(GLOB_RECURSE PeaKTrace_SOURCES CONFIGURE_DEPENDS "*.cpp")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-debug.*")
-add_executable(PeaKTrace ${PeaKTrace_SOURCES} scripts/header/tracer.h scripts/source/tracer.cpp scripts/header/world.h scripts/header/camera.h scripts/header/math/vector.h scripts/header/light.h scripts/source/light.cpp scripts/source/world.cpp scripts/header/object/object.h scripts/header/object/sphere.h scripts/source/math/vector.cpp scripts/header/math/trig.h header/misc/abs.h scripts/header/math/ray.h scripts/header/math/collisionResult.h scripts/source/object/sphere.cpp scripts/source/object/object.cpp scripts/source/camera.cpp scripts/header/math/degRad.h config/tracerConfig.h)
+add_executable(PeaKTrace ${PeaKTrace_SOURCES} scripts/header/tracer.h scripts/source/tracer.cpp scripts/header/world.h scripts/header/camera.h scripts/header/math/vector.h scripts/header/light.h scripts/source/light.cpp scripts/source/world.cpp scripts/header/object/object.h scripts/header/object/sphere.h scripts/source/math/vector.cpp scripts/header/math/trig.h header/misc/abs.h scripts/header/math/ray.h scripts/header/math/collisionResult.h scripts/source/object/sphere.cpp scripts/source/object/object.cpp scripts/source/camera.cpp scripts/header/math/degRad.h config/tracerConfig.h scripts/header/object/triangle.h)
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)

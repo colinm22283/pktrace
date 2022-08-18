@@ -1,2 +1,2 @@
 cd bin
-../cmake-build-debug/PeaKAI
+../cmake-build-debug/PeaKTrace

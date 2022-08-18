@@ -12,11 +12,11 @@ Light::Light(float _intensity, vector3 _position) : intensity(_intensity), posit
 Light::~Light()
 { }
 
+float Light::intensityAt(float distance)
+{
+    return intensity / (4 * M_1_PIf * distance);
+}
 float Light::intensityAt(vector3 pos)
 {
-    return intensity / (4 * M_1_PIf * (
-        powf32(pos.x - position.x, 2) +
-        powf32(pos.y - position.y, 2) +
-        powf32(pos.z - position.z, 2)
-   ));
+    return intensityAt(magnitude(pos - position));
 }
