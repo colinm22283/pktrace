@@ -24,6 +24,7 @@ include_directories("${PROJECT_SOURCE_DIR}/config/")
 
 file(GLOB_RECURSE PeaKTrace_SOURCES CONFIGURE_DEPENDS "*.cpp")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-debug.*")
-add_executable(PeaKTrace ${PeaKTrace_SOURCES} scripts/header/tracer.h scripts/source/tracer.cpp scripts/header/world.h scripts/header/camera.h scripts/header/math/vector.h scripts/header/light.h scripts/source/light.cpp scripts/source/world.cpp scripts/header/object/object.h scripts/header/object/sphere.h scripts/source/math/vector.cpp scripts/header/math/trig.h header/misc/abs.h scripts/header/math/ray.h scripts/header/math/collisionResult.h scripts/source/object/sphere.cpp scripts/source/object/object.cpp scripts/source/camera.cpp scripts/header/math/degRad.h config/tracerConfig.h scripts/header/object/triangle.h source/render/color.cpp scripts/header/fcolor.h scripts/source/fcolor.cpp)
+list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-release.*")
+add_executable(PeaKTrace ${PeaKTrace_SOURCES})
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)
