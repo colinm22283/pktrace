@@ -12,4 +12,7 @@ struct color
     uint8_t g;
     uint8_t b;
     uint8_t a;
+
+    color operator+(color c);
+    color operator-(color c);
 };

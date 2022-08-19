@@ -30,11 +30,39 @@ void Script::start()
             (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0)),  // left wall
             (Object*)new Sphere(10000, VECTOR3(10020, 0, 0))    // right wall
     };
-    World::lightCount = 2;
+    World::lightCount = 10;
     World::lights = new Light[]
     {
-        Light(1000, VECTOR3(18, 18, 18)),
-        Light(1000, VECTOR3(-18, 18, -18))
+        Light(1000, VECTOR3(18, 18, -18)),
+        Light(1000, VECTOR3(17, 18, -18)),
+        Light(1000, VECTOR3(16, 18, -18)),
+        Light(1000, VECTOR3(15, 18, -18)),
+        Light(1000, VECTOR3(14, 18, -18)),
+        Light(1000, VECTOR3(13, 18, -18)),
+        Light(1000, VECTOR3(12, 18, -18)),
+        Light(1000, VECTOR3(11, 18, -18)),
+        Light(1000, VECTOR3(10, 18, -18)),
+        Light(1000, VECTOR3(9, 18, -18)),
+        Light(1000, VECTOR3(18, 17, -18)),
+        Light(1000, VECTOR3(17, 17, -18)),
+        Light(1000, VECTOR3(16, 17, -18)),
+        Light(1000, VECTOR3(15, 17, -18)),
+        Light(1000, VECTOR3(14, 17, -18)),
+        Light(1000, VECTOR3(13, 17, -18)),
+        Light(1000, VECTOR3(12, 17, -18)),
+        Light(1000, VECTOR3(11, 17, -18)),
+        Light(1000, VECTOR3(10, 17, -18)),
+        Light(1000, VECTOR3(9, 17, -18)),
+        Light(1000, VECTOR3(18, 16, -18)),
+        Light(1000, VECTOR3(17, 16, -18)),
+        Light(1000, VECTOR3(16, 16, -18)),
+        Light(1000, VECTOR3(15, 16, -18)),
+        Light(1000, VECTOR3(14, 16, -18)),
+        Light(1000, VECTOR3(13, 16, -18)),
+        Light(1000, VECTOR3(12, 16, -18)),
+        Light(1000, VECTOR3(11, 16, -18)),
+        Light(1000, VECTOR3(10, 16, -18)),
+        Light(1000, VECTOR3(9, 16, -18))
     };
 
     Camera::position = VECTOR3(0, 0, -6);

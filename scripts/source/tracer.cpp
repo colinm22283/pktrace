@@ -164,6 +164,6 @@ void tracerThread()
         }
         else Tracer::pixelBuf[inst.x][inst.y] = SKYBOX_COLOR;
 
-//        for (unsigned int i = 0; i < 10000; i++);
+//        for (unsigned int i = 0; i < 100000; i++);
     }
 }
