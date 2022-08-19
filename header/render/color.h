@@ -15,4 +15,9 @@ struct color
 
     color operator+(color c);
     color operator-(color c);
+    color operator*(float x);
+    color operator/(float x);
+
+    color operator+=(color c);
+    color operator-=(color c);
 };

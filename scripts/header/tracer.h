@@ -1,6 +1,6 @@
 #pragma once
 
-#include <color.h>
+#include <render/color.h>
 #include <math/degRad.h>
 
 #include <tracerConfig.h>
