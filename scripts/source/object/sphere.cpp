@@ -8,22 +8,11 @@
 
 Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0))
 { }
-Sphere::Sphere(float _radius, vector3 _position) : radius(_radius), position(_position)
+Sphere::Sphere(float _radius, vector3 _position, float _reflectivity) : radius(_radius), position(_position), reflectivity(_reflectivity)
 { }
 
 collisionResult Sphere::checkCollision(ray r)
 {
-//    vector3 sphereDirection = VECTOR3(
-//        position.x - Camera::position.x,
-//        position.y - Camera::position.y,
-//        position.z - Camera::position.z
-//    );
-//
-//    float angle = transformedDotProd(r.direction, sphereDirection);
-//
-//    if (angle < 0.1f) return { true };
-//    else return { false };
-
     vector3 disp = r.origin - position;
 
     float a = dotProd(r.direction, r.direction);
@@ -53,5 +42,15 @@ collisionResult Sphere::checkCollision(ray r)
         if (t < 0) return (collisionResult){ false };
     }
 
-    return (collisionResult){ true, r.origin + (r.direction * t), t };
+    vector3 collisionPoint = r.origin + (r.direction * t);
+
+    vector3 normal = normalize(collisionPoint - position);
+
+    return (collisionResult){
+        true,
+        collisionPoint,
+        t,
+        normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
+        reflectivity
+    };
 }

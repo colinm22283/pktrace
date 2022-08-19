@@ -4,6 +4,8 @@
 
 #include <misc/minMax.h>
 
+#include <tracerConfig.h>
+
 Light::Light()
 {
     intensity = 0;
@@ -20,7 +22,7 @@ Light::~Light()
 
 float Light::intensityAt(float distance)
 {
-    return intensity / (4 * M_1_PIf * distance);
+    return intensity / LIGHT_DIV(distance);
 }
 float Light::intensityAt(vector3 pos)
 {

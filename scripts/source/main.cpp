@@ -17,22 +17,25 @@ void Script::start()
 {
     Global::fpsLimit = 100;
 
-    Engine::resizeWindow(800, 800);
+    Engine::resizeWindow(1400, 800);
 
     World::objectCount = 7;
     World::objects = new Object*[]
     {
-            (Object*)new Sphere(2, VECTOR3(0, 0, 0)),        // center sphere
-            (Object*)new Sphere(10000, VECTOR3(0, -10020, 0)), // floor
-            (Object*)new Sphere(10000, VECTOR3(0, 10020, 0)),   // ceiling
-            (Object*)new Sphere(10000, VECTOR3(0, 0, 10020)),   // back wall
-            (Object*)new Sphere(10000, VECTOR3(0, 0, -10020)),  // front wall
-            (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0)),  // left wall
-            (Object*)new Sphere(10000, VECTOR3(10020, 0, 0))    // right wall
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), 0.9f),        // center sphere
+        (Object*)new Sphere(10000, VECTOR3(0, -10020, 0), 0.01f), // floor
+        (Object*)new Sphere(10000, VECTOR3(0, 10020, 0), 0.01f),   // ceiling
+        (Object*)new Sphere(10000, VECTOR3(0, 0, 10020), 1.0f),   // back wall
+        (Object*)new Sphere(10000, VECTOR3(0, 0, -10020), 1.0f),  // front wall
+        (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0), 0.01f),  // left wall
+        (Object*)new Sphere(10000, VECTOR3(10020, 0, 0), 0.01f),    // right wall
+        (Object*)new Sphere(6, VECTOR3(7, 4, 0), 0.5f)
     };
-    World::lightCount = 4;
+    World::lightCount = 1;
     World::lights = new Light[]
     {
+        Light(3000, VECTOR3(0, 18, 0), RGB(255, 255, 255)),
+        Light(1000, VECTOR3(0, -4, 0), RGB(255, 0, 0)),
         Light(1000, VECTOR3(18, 18, -18), RGB(255, 0, 0)),
         Light(1000, VECTOR3(-18, 18, -18), RGB(0, 255, 0)),
         Light(1000, VECTOR3(18, 18, 18), RGB(0, 0, 255)),
@@ -67,8 +70,11 @@ void Script::start()
 //        Light(1000, VECTOR3(9, 16, -18))
     };
 
-    Camera::position = VECTOR3(0, 0, -6);
-    Camera::rotation = VECTOR3(RADIANS(0.0f), 0, 0);
+    Camera::position = VECTOR3(0, 3, -6);
+    Camera::rotation = VECTOR3(RADIANS(-20.0f), RADIANS(20.0f), 0);
+
+    Camera::position.x = sin(-Camera::rotation.y) * 19;
+    Camera::position.z = -cos(-Camera::rotation.y) * 6;
 
     Tracer::init();
 }
@@ -78,16 +84,6 @@ void Script::update()
     Tracer::draw();
 
     if (!Tracer::ready) Tracer::drawProgress();
-
-    if (Tracer::ready)
-    {
-        Camera::rotation.y += 0.1f;
-
-        Camera::position.x = sin(-Camera::rotation.y) * 6;
-        Camera::position.z = -cos(-Camera::rotation.y) * 6;
-
-        new std::thread(Tracer::update);
-    }
 }
 
 void Script::exit()
@@ -97,5 +93,14 @@ void Script::exit()
 
 void Script::keyUp(SDL_Keysym keysym)
 {
+    if (Tracer::ready)
+    {
+        Camera::rotation.y += 0.1f;
 
+        Camera::position.x = sin(-Camera::rotation.y) * 19;
+        Camera::position.z = -cos(-Camera::rotation.y) * 6;
+
+        new std::thread(Tracer::update);
+//        Tracer::update();
+    }
 }

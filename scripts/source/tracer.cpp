@@ -11,8 +11,6 @@
 
 #include <object/sphere.h>
 
-#define PIXEL_INSTRUCTION_SPACING 5
-
 struct renderInstruction
 {
     int x;
@@ -25,6 +23,7 @@ unsigned int totalInstructions;
 renderInstruction* instructions;
 
 void tracerThread();
+color tracerRecur(ray r, unsigned int currentIteration);
 
 unsigned int Tracer::width = TRACER_BUFFER_WIDTH;
 unsigned int Tracer::height = TRACER_BUFFER_HEIGHT;
@@ -140,27 +139,42 @@ void tracerThread()
             COS(yaw) * COS(pitch)
         ) };
 
-        collisionResult res = World::raycast(r);
-
-        if (res.hit)
-        {
-            color c = GS(0);
-
-            for (unsigned int i = 0; i < World::lightCount; i++)
-            {
-                vector3 lightVec = World::lights[i].position - res.position;
-                float lightVecMagnitude = magnitude(lightVec);
-                vector3 lightVecNormalized = lightVec / lightVecMagnitude;
-
-                collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * 0.1f), lightVecNormalized });
-
-                if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude));
-            }
-
-            Tracer::pixelBuf[inst.x][inst.y] = c;
-        }
-        else Tracer::pixelBuf[inst.x][inst.y] = SKYBOX_COLOR;
+        Tracer::pixelBuf[inst.x][inst.y] = tracerRecur(r, 1);
 
 //        for (unsigned int i = 0; i < 100000; i++);
     }
+}
+
+color tracerRecur(ray r, unsigned int currentIteration)
+{
+    if (currentIteration > REFLECTION_RECURSION_LIMIT) return GS(0);
+
+    collisionResult res = World::raycast(r);
+
+    if (res.hit)
+    {
+        color c = GS(0);
+
+        float diffuse = 1.0f - res.reflectivity;
+
+        for (unsigned int i = 0; i < World::lightCount; i++)
+        {
+            vector3 lightVec = World::lights[i].position - res.position;
+            float lightVecMagnitude = magnitude(lightVec);
+            vector3 lightVecNormalized = lightVec / lightVecMagnitude;
+
+            collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized });
+
+            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude)) * diffuse;
+        }
+
+        return c + (tracerRecur(
+            (ray) {
+                res.position + (normalize(res.result) * NEAR_CLIPPING_DISTANCE),
+                res.result
+            },
+            currentIteration + 1
+        ) * res.reflectivity);
+    }
+    //else return SKYBOX_COLOR;
 }
