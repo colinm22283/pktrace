@@ -15,7 +15,8 @@ bool keyDown = false;
 
 void Script::start()
 {
-    Global::fpsLimit = 100;
+    Global::fpsLimit = 10000000;
+    Global::fpsOutput = true;
 
     Engine::resizeWindow(800, 800);
 
