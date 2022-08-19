@@ -31,6 +31,15 @@ color color::operator-(color c)
     );
 }
 
+color color::operator*(color c)
+{
+    return RGBA(
+        (uint8_t)COLOR_VALUE_MOD(r * c.r),
+        (uint8_t)COLOR_VALUE_MOD(g * c.g),
+        (uint8_t)COLOR_VALUE_MOD(b * c.b),
+        (uint8_t)COLOR_VALUE_MOD(a * c.a)
+    );
+}
 color color::operator*(float x)
 {
     return RGBA(

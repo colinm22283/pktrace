@@ -17,29 +17,29 @@ void Script::start()
 {
     Global::fpsLimit = 100;
 
-    Engine::resizeWindow(1400, 800);
+    Engine::resizeWindow(800, 800);
 
-    World::objectCount = 7;
+    World::objectCount = 8;
     World::objects = new Object*[]
     {
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), 0.9f),        // center sphere
-        (Object*)new Sphere(10000, VECTOR3(0, -10020, 0), 0.01f), // floor
-        (Object*)new Sphere(10000, VECTOR3(0, 10020, 0), 0.01f),   // ceiling
-        (Object*)new Sphere(10000, VECTOR3(0, 0, 10020), 1.0f),   // back wall
-        (Object*)new Sphere(10000, VECTOR3(0, 0, -10020), 1.0f),  // front wall
-        (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0), 0.01f),  // left wall
-        (Object*)new Sphere(10000, VECTOR3(10020, 0, 0), 0.01f),    // right wall
-        (Object*)new Sphere(6, VECTOR3(7, 4, 0), 0.5f)
+        (Object*)new Sphere(10000, VECTOR3(0, -10020, 0), FGS(1.0f), 0.01f), // floor
+        (Object*)new Sphere(10000, VECTOR3(0, 10020, 0), FGS(1.0f), 0.01f),   // ceiling
+        (Object*)new Sphere(10000, VECTOR3(0, 0, 10020), FGS(1.0f), 0.01f),   // back wall
+        (Object*)new Sphere(10000, VECTOR3(0, 0, -10020), FGS(1.0f), 0.01f),  // front wall
+        (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0), FGS(1.0f), 0.01f),  // left wall
+        (Object*)new Sphere(10000, VECTOR3(10020, 0, 0), FGS(1.0f), 0.01f),    // right wall
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), FGS(1.0f), 0.7f),        // center sphere
+        (Object*)new Sphere(1, VECTOR3(0, 6, 3), FRGB255(0, 255, 0), 0.2f)
     };
     World::lightCount = 1;
     World::lights = new Light[]
     {
-        Light(3000, VECTOR3(0, 18, 0), RGB(255, 255, 255)),
-        Light(1000, VECTOR3(0, -4, 0), RGB(255, 0, 0)),
-        Light(1000, VECTOR3(18, 18, -18), RGB(255, 0, 0)),
-        Light(1000, VECTOR3(-18, 18, -18), RGB(0, 255, 0)),
-        Light(1000, VECTOR3(18, 18, 18), RGB(0, 0, 255)),
-        Light(1000, VECTOR3(-18, 18, 18), RGB(255, 255, 255))
+        Light(50.0f, VECTOR3(0, 19, 0), FGS(1.0f)),
+
+        Light(1000, VECTOR3(18, 18, -18), FRGB(1.0f, 0.0f, 0.0f)),
+        Light(1000, VECTOR3(-18, 18, -18), FRGB(0.0f, 1.0f, 0.0f)),
+        Light(1000, VECTOR3(18, 18, 18), FRGB(0.0f, 0.0f, 1.0f)),
+        Light(1000, VECTOR3(-18, 18, 18), FRGB(1.0f, 1.0f, 1.0f))
 //        Light(1000, VECTOR3(16, 18, -18)),
 //        Light(1000, VECTOR3(15, 18, -18)),
 //        Light(1000, VECTOR3(14, 18, -18)),
@@ -70,11 +70,12 @@ void Script::start()
 //        Light(1000, VECTOR3(9, 16, -18))
     };
 
-    Camera::position = VECTOR3(0, 3, -6);
-    Camera::rotation = VECTOR3(RADIANS(-20.0f), RADIANS(20.0f), 0);
+    Camera::position = VECTOR3(0, 3, -10);
+//    Camera::rotation = VECTOR3(RADIANS(-20.0f), 0, 0);
+    Camera::rotation = VECTOR3(RADIANS(-20.0f), 0, 0);
 
-    Camera::position.x = sin(-Camera::rotation.y) * 19;
-    Camera::position.z = -cos(-Camera::rotation.y) * 6;
+    Camera::position.x = sin(-Camera::rotation.y) * 10;
+    Camera::position.z = -cos(-Camera::rotation.y) * 10;
 
     Tracer::init();
 }
@@ -95,10 +96,10 @@ void Script::keyUp(SDL_Keysym keysym)
 {
     if (Tracer::ready)
     {
-        Camera::rotation.y += 0.1f;
+        Camera::rotation.y += RADIANS(45.0f);
 
-        Camera::position.x = sin(-Camera::rotation.y) * 19;
-        Camera::position.z = -cos(-Camera::rotation.y) * 6;
+        Camera::position.x = sin(-Camera::rotation.y) * 10;
+        Camera::position.z = -cos(-Camera::rotation.y) * 10;
 
         new std::thread(Tracer::update);
 //        Tracer::update();

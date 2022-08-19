@@ -2,6 +2,7 @@
 
 #include <math/vector.h>
 #include <math/trig.h>
+#include <render/color.h>
 
 vector3 vector3::operator+(vector3 v)
 {

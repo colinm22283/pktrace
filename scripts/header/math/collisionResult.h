@@ -2,6 +2,7 @@
 
 #include <math/vector.h>
 #include <object/object.h>
+#include <fcolor.h>
 
 struct collisionResult
 {
@@ -10,4 +11,5 @@ struct collisionResult
     float distance;
     vector3 result;
     float reflectivity;
+    fcolor col;
 };

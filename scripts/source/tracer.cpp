@@ -1,4 +1,5 @@
 #include <thread>
+#include <iostream>
 
 #include <render/render.h>
 
@@ -23,7 +24,7 @@ unsigned int totalInstructions;
 renderInstruction* instructions;
 
 void tracerThread();
-color tracerRecur(ray r, unsigned int currentIteration);
+fcolor tracerRecur(ray r, unsigned int currentIteration);
 
 unsigned int Tracer::width = TRACER_BUFFER_WIDTH;
 unsigned int Tracer::height = TRACER_BUFFER_HEIGHT;
@@ -139,21 +140,21 @@ void tracerThread()
             COS(yaw) * COS(pitch)
         ) };
 
-        Tracer::pixelBuf[inst.x][inst.y] = tracerRecur(r, 1);
+        Tracer::pixelBuf[inst.x][inst.y] = fcolorToColor(tracerRecur(r, 1));
 
 //        for (unsigned int i = 0; i < 100000; i++);
     }
 }
 
-color tracerRecur(ray r, unsigned int currentIteration)
+fcolor tracerRecur(ray r, unsigned int currentIteration)
 {
-    if (currentIteration > REFLECTION_RECURSION_LIMIT) return GS(0);
+    if (currentIteration > REFLECTION_RECURSION_LIMIT) return FGS(0);
 
     collisionResult res = World::raycast(r);
 
     if (res.hit)
     {
-        color c = GS(0);
+        fcolor c = FGS(0);
 
         float diffuse = 1.0f - res.reflectivity;
 
@@ -165,7 +166,7 @@ color tracerRecur(ray r, unsigned int currentIteration)
 
             collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized });
 
-            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude)) * diffuse;
+            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude)) * diffuse;
         }
 
         return c + (tracerRecur(
@@ -174,7 +175,7 @@ color tracerRecur(ray r, unsigned int currentIteration)
                 res.result
             },
             currentIteration + 1
-        ) * res.reflectivity);
+        ) * res.reflectivity * res.col);
     }
-    //else return SKYBOX_COLOR;
+    else return SKYBOX_COLOR;
 }
