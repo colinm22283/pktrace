@@ -7,4 +7,6 @@
 
 #define AUDIO_ENABLED 1
 
-#define PEAK_ENGINE_DEBUG_MODE 1
+#ifndef PEAK_ENGINE_DEBUG_MODE
+    #define PEAK_ENGINE_DEBUG_MODE 0
+#endif

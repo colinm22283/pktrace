@@ -4,6 +4,7 @@
 #include <script.h>
 #include <global.h>
 #include <engine.h>
+#include <debug.h>
 
 #include <tracer.h>
 #include <world.h>
@@ -20,6 +21,7 @@ void Script::start()
 
     Engine::resizeWindow(800, 800);
 
+    debugPrint("Allocating object memory");
     World::objectCount = 8;
     World::objects = new Object*[]
     {
@@ -32,6 +34,7 @@ void Script::start()
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), FGS(1.0f), 0.7f, 0.5),        // center sphere
         (Object*)new Sphere(1, VECTOR3(0, 6, 3), FRGB255(0, 255, 0), 0.2f, 0.7)
     };
+    debugPrint("Allocating light memory");
     World::lightCount = 4;
     World::lights = new Light[]
     {
@@ -46,12 +49,14 @@ void Script::start()
         Light(1000, VECTOR3(-18, 18, 18), FRGB(1.0f, 1.0f, 1.0f))
     };
 
+    debugPrint("Translating camera");
     Camera::position = VECTOR3(0, 3, -10);
     Camera::rotation = VECTOR3(RADIANS(-20.0f), RADIANS(40.0f), 0);
 
     Camera::position.x = sin(-Camera::rotation.y) * 10;
     Camera::position.z = -cos(-Camera::rotation.y) * 10;
 
+    debugPrint("Initializing tracer");
     Tracer::init();
 }
 
@@ -71,6 +76,8 @@ void Script::keyUp(SDL_Keysym keysym)
 {
     if (Tracer::ready)
     {
+        debugPrint("Reloading render");
+
         Camera::rotation.y += RADIANS(30.0f);
 
         Camera::position.x = sin(-Camera::rotation.y) * 10;

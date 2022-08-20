@@ -7,6 +7,14 @@ set(CMAKE_MODULE_PATH /usr/share/cmake-3.22/Modules)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/)
 
+message(STATUS "Build type: ${MAKE_BUILD_TYPE}")
+
+if (${CMAKE_BUILD_TYPE} MATCHES Debug)
+    add_definitions(-DPEAK_ENGINE_DEBUG_MODE=1)
+else()
+    add_definitions(-DPEAK_ENGINE_DEBUG_MODE=0)
+endif()
+
 message(STATUS ${CMAKE_MODULE_PATH})
 
 find_package(SDL2 REQUIRED)
@@ -25,6 +33,7 @@ include_directories("${PROJECT_SOURCE_DIR}/config/")
 file(GLOB_RECURSE PeaKTrace_SOURCES CONFIGURE_DEPENDS "*.cpp")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-debug.*")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-release.*")
+
 add_executable(PeaKTrace ${PeaKTrace_SOURCES})
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)
