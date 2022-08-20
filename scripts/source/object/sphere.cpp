@@ -8,7 +8,7 @@
 
 Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0))
 { }
-Sphere::Sphere(float _radius, vector3 _position, fcolor _col, float _reflectivity) : radius(_radius), position(_position), col(_col), reflectivity(_reflectivity)
+Sphere::Sphere(float _radius, vector3 _position, fcolor _col, float _reflectivity, float _diffuse) : radius(_radius), position(_position), col(_col), reflectivity(_reflectivity), diffuse(_diffuse)
 { }
 
 collisionResult Sphere::checkCollision(ray r)
@@ -52,6 +52,7 @@ collisionResult Sphere::checkCollision(ray r)
         t,
         normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
         reflectivity,
+        diffuse,
         col
     };
 }

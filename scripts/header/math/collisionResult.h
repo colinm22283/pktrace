@@ -11,5 +11,6 @@ struct collisionResult
     float distance;
     vector3 result;
     float reflectivity;
+    float diffuse;
     fcolor col;
 };

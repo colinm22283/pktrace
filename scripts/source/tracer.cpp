@@ -156,8 +156,6 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
     {
         fcolor c = FGS(0);
 
-        float diffuse = 1.0f - res.reflectivity;
-
         for (unsigned int i = 0; i < World::lightCount; i++)
         {
             vector3 lightVec = World::lights[i].position - res.position;
@@ -166,7 +164,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
 
             collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized });
 
-            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude)) * diffuse;
+            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude)) * res.diffuse;
         }
 
         return c + (tracerRecur(
