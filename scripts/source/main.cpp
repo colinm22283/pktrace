@@ -22,7 +22,7 @@ void Script::start()
     Engine::resizeWindow(800, 800);
 
     debugPrint("Allocating object memory");
-    World::objectCount = 8;
+    World::objectCount = 9;
     World::objects = new Object*[]
     {
         (Object*)new Sphere(10000, VECTOR3(0, -10020, 0), FGS(1.0f), 0.02f, 0.8), // floor
@@ -32,7 +32,8 @@ void Script::start()
         (Object*)new Sphere(10000, VECTOR3(-10020, 0, 0), FGS(1.0f), 0.02f, 0.8),  // left wall
         (Object*)new Sphere(10000, VECTOR3(10020, 0, 0), FGS(1.0f), 0.02f, 0.8),    // right wall
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), FGS(1.0f), 0.7f, 0.5),        // center sphere
-        (Object*)new Sphere(1, VECTOR3(0, 6, 3), FRGB255(0, 255, 0), 0.2f, 0.7)
+        (Object*)new Sphere(1, VECTOR3(0, 6, 3), FRGB255(0, 255, 0), 0.2f, 0.7),
+        (Object*)new Sphere(7, VECTOR3(0, 20, 0), FGS(1.0f), 1.0f, 0.0)
     };
     debugPrint("Allocating light memory");
     World::lightCount = 4;
