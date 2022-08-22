@@ -11,7 +11,7 @@
 
 #define SKYBOX_COLOR FRGB(0.33, 0.64, 1.00)
 
-#define FOV RADIANS(60.0f)
+#define FOV RADIANS(60.0)
 #define EXPOSURE
 
 #define REFLECTION_RECURSION_LIMIT 10

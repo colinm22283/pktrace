@@ -87,13 +87,9 @@ void Script::start()
     Tracer::init();
 }
 
-bool tog = true;
-
 void Script::update()
 {
     Tracer::draw();
-
-    std::cout << Tracer::ready;
 
     if (!Tracer::ready) Tracer::drawProgress();
 }
