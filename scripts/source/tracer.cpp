@@ -42,7 +42,7 @@ void Tracer::init()
 
         for (unsigned int y = 0; y < Tracer::height; y++)
         {
-            uint8_t r = (float)rand() / RAND_MAX * COLOR_RANDOMIZATION - (COLOR_RANDOMIZATION / 2);
+            uint8_t r = (TRACER_FLOAT)rand() / RAND_MAX * COLOR_RANDOMIZATION - (COLOR_RANDOMIZATION / 2);
             Tracer::pixelBuf[x][y] = RGB(
                 (uint8_t)(DEFAULT_COLOR.r + r),
                 (uint8_t) (DEFAULT_COLOR.g + r),
@@ -69,7 +69,7 @@ void Tracer::init()
     // shuffle render positions
     for (int current, top = totalInstructions; top > 0; top--)
     {
-        current = (int)((float)rand() / RAND_MAX * top + 1);
+        current = (int)((TRACER_FLOAT)rand() / RAND_MAX * top + 1);
         renderInstruction temp = instructions[current];
         instructions[current] = instructions[top];
         instructions[top] = temp;
@@ -97,7 +97,7 @@ void Tracer::update()
 
         for (unsigned int y = 0; y < Tracer::height; y++)
         {
-            uint8_t r = (float)rand() / RAND_MAX * COLOR_RANDOMIZATION - (COLOR_RANDOMIZATION / 2);
+            uint8_t r = (TRACER_FLOAT)rand() / RAND_MAX * COLOR_RANDOMIZATION - (COLOR_RANDOMIZATION / 2);
             Tracer::pixelBuf[x][y] = RGB(
                 (uint8_t)(DEFAULT_COLOR.r + r),
                 (uint8_t)(DEFAULT_COLOR.g + r),
@@ -121,7 +121,7 @@ void Tracer::update()
 
 void Tracer::drawProgress()
 {
-    Render::fillRect(0, Global::windowHeight - 10, (float)currentInstruction / totalInstructions * Global::windowWidth, 10, RGB(0, 255, 0));
+    Render::fillRect(0, Global::windowHeight - 10, (TRACER_FLOAT)currentInstruction / totalInstructions * Global::windowWidth, 10, RGB(0, 255, 0));
 }
 
 void tracerThread()
@@ -131,8 +131,8 @@ void tracerThread()
         unsigned int temp = currentInstruction++;
         renderInstruction inst = instructions[temp];
 
-        float pitch = Camera::rotation.x + (((float)inst.y / Tracer::height - 0.5f) * FOV);
-        float yaw = Camera::rotation.y + (((float)inst.x / Tracer::width - 0.5f) * FOV);
+        TRACER_FLOAT pitch = Camera::rotation.x + (((TRACER_FLOAT)inst.y / Tracer::height - 0.5f) * FOV);
+        TRACER_FLOAT yaw = Camera::rotation.y + (((TRACER_FLOAT)inst.x / Tracer::width - 0.5f) * FOV);
 
         ray r = { Camera::position, VECTOR3(
             SIN(yaw) * COS(pitch),
@@ -159,7 +159,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
         for (unsigned int i = 0; i < World::lightCount; i++)
         {
             vector3 lightVec = World::lights[i].position - res.position;
-            float lightVecMagnitude = magnitude(lightVec);
+            TRACER_FLOAT lightVecMagnitude = magnitude(lightVec);
             vector3 lightVecNormalized = lightVec / lightVecMagnitude;
 
             collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized });

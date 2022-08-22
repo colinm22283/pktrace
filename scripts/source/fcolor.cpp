@@ -44,7 +44,7 @@ fcolor fcolor::operator-(fcolor fc)
     );
 }
 
-fcolor fcolor::operator*(float x)
+fcolor fcolor::operator*(TRACER_FLOAT x)
 {
     return FRGBA(
         FCOLOR_FUNCTION(r * x),
@@ -63,7 +63,7 @@ fcolor fcolor::operator*(fcolor fc)
     );
 }
 
-fcolor fcolor::operator/(float x)
+fcolor fcolor::operator/(TRACER_FLOAT x)
 {
     return FRGBA(
         FCOLOR_FUNCTION(r / x),

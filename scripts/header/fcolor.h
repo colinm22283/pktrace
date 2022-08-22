@@ -1,6 +1,7 @@
 #pragma once
 
 #include <render/color.h>
+#include <tracerConfig.h>
 
 #define FGS(gs) (fcolor){gs,gs,gs,1.0f}
 #define FRGB(r,g,b) (fcolor){r,g,b,1.0f}
@@ -12,14 +13,14 @@
 
 struct fcolor
 {
-    float r, g, b, a;
+    TRACER_FLOAT r, g, b, a;
 
     fcolor operator+(fcolor fc);
     fcolor operator+=(fcolor fc);
     fcolor operator-(fcolor fc);
-    fcolor operator*(float x);
+    fcolor operator*(TRACER_FLOAT x);
     fcolor operator*(fcolor fc);
-    fcolor operator/(float x);
+    fcolor operator/(TRACER_FLOAT x);
     fcolor operator/(fcolor fc);
 };
 

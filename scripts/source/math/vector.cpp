@@ -12,26 +12,26 @@ vector3 vector3::operator-(vector3 v)
 {
     return VECTOR3(x - v.x, y - v.y, z - v.z);
 }
-vector3 vector3::operator*(float _)
+vector3 vector3::operator*(TRACER_FLOAT _)
 {
     return VECTOR3(x * _, y * _, z * _);
 }
-vector3 vector3::operator/(float _)
+vector3 vector3::operator/(TRACER_FLOAT _)
 {
     return VECTOR3(x / _, y / _, z / _);
 }
 
-float transformedDotProd(vector3 a, vector3 b)
+TRACER_FLOAT transformedDotProd(vector3 a, vector3 b)
 {
     return ACOS(dotProd(a, b) / (magnitude(a) * magnitude(b)));
 }
 
-float dotProd(vector3 a, vector3 b)
+TRACER_FLOAT dotProd(vector3 a, vector3 b)
 {
     return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-float magnitude(vector3 v)
+TRACER_FLOAT magnitude(vector3 v)
 {
     return sqrtf32(
         powf32(v.x, 2) +

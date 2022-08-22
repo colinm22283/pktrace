@@ -8,9 +8,9 @@ struct collisionResult
 {
     bool hit;
     vector3 position;
-    float distance;
+    TRACER_FLOAT distance;
     vector3 result;
-    float reflectivity;
-    float diffuse;
+    TRACER_FLOAT reflectivity;
+    TRACER_FLOAT diffuse;
     fcolor col;
 };

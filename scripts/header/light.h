@@ -8,13 +8,13 @@ class Light
 {
 public:
     Light();
-    Light(float intensity, vector3 position, fcolor col);
+    Light(TRACER_FLOAT intensity, vector3 position, fcolor col);
     ~Light();
 
-    float intensity;
+    TRACER_FLOAT intensity;
     vector3 position;
     fcolor col;
 
-    virtual float intensityAt(float distance);
-    virtual float intensityAt(vector3 pos);
+    virtual TRACER_FLOAT intensityAt(TRACER_FLOAT distance);
+    virtual TRACER_FLOAT intensityAt(vector3 pos);
 };

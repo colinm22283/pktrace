@@ -18,3 +18,6 @@
 #define NEAR_CLIPPING_DISTANCE 0.05f
 
 #define LIGHT_DIV(distance) (4.0f * M_1_PIf * distance)
+
+#define TRACER_FLOAT double
+#define TRACER_TRIG_DOUBLE_PRECISION 1
