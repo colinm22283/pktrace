@@ -8,14 +8,14 @@ class Sphere : public Object
 {
 public:
     Sphere();
-    Sphere(float radius, vector3 position, fcolor col, float reflectivity, float diffuse);
+    Sphere(TRACER_FLOAT radius, vector3 position, fcolor col, TRACER_FLOAT reflectivity, TRACER_FLOAT diffuse);
 
-    float radius;
+    TRACER_FLOAT radius;
     vector3 position;
 
     fcolor col;
-    float reflectivity;
-    float diffuse;
+    TRACER_FLOAT reflectivity;
+    TRACER_FLOAT diffuse;
 
     collisionResult checkCollision(ray r);
 };

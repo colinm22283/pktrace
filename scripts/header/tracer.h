@@ -10,6 +10,7 @@ namespace Tracer
     extern bool ready;
     extern unsigned int width;
     extern unsigned int height;
+    extern TRACER_FLOAT aspectRatio;
     extern color** pixelBuf;
 
     void init();

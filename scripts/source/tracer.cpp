@@ -29,6 +29,8 @@ fcolor tracerRecur(ray r, unsigned int currentIteration);
 unsigned int Tracer::width = TRACER_BUFFER_WIDTH;
 unsigned int Tracer::height = TRACER_BUFFER_HEIGHT;
 
+TRACER_FLOAT Tracer::aspectRatio = (TRACER_FLOAT)TRACER_BUFFER_WIDTH / (TRACER_FLOAT)TRACER_BUFFER_HEIGHT;
+
 color** Tracer::pixelBuf;
 
 void Tracer::init()
@@ -56,10 +58,7 @@ void Tracer::init()
     {
         for (int y = 0; y < Tracer::height; y++)
         {
-            instructions[i] = {
-                x,
-                y
-            };
+            instructions[i] = { x, y };
             i++;
         }
     }
@@ -132,7 +131,7 @@ void tracerThread()
         renderInstruction inst = instructions[temp];
 
         TRACER_FLOAT pitch = Camera::rotation.x + (((TRACER_FLOAT)inst.y / Tracer::height - 0.5f) * FOV);
-        TRACER_FLOAT yaw = Camera::rotation.y + (((TRACER_FLOAT)inst.x / Tracer::width - 0.5f) * FOV);
+        TRACER_FLOAT yaw = Camera::rotation.y + (((TRACER_FLOAT)inst.x / Tracer::width - 0.5f) * FOV * Tracer::aspectRatio);
 
         ray r = { Camera::position, VECTOR3(
             SIN(yaw) * COS(pitch),

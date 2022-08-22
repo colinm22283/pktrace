@@ -1,7 +1,7 @@
 #pragma once
 
-#define TRACER_BUFFER_WIDTH 800
-#define TRACER_BUFFER_HEIGHT 800
+#define TRACER_BUFFER_WIDTH 1600
+#define TRACER_BUFFER_HEIGHT 900
 
 #define TRACER_THREADS 16
 
@@ -9,15 +9,15 @@
 #define COLOR_RANDOMIZATION 20
 #define ERASE_PREVIOUS_FRAME 1
 
-#define SKYBOX_COLOR FRGB(0.33f, 0.64f, 1.00f)
-#define AMBIENT_LIGHT 0.0f
+#define SKYBOX_COLOR FRGB(0.33, 0.64, 1.00)
 
-#define FOV RADIANS(100.0f)
+#define FOV RADIANS(60.0f)
+#define EXPOSURE
 
 #define REFLECTION_RECURSION_LIMIT 10
-#define NEAR_CLIPPING_DISTANCE 0.05f
+#define NEAR_CLIPPING_DISTANCE 0.0001f
 
-#define LIGHT_DIV(distance) (4.0f * M_1_PIf * distance)
+#define LIGHT_DIV(distance) (4.0 * M_PIf64 * distance)
 
 #define TRACER_FLOAT double
 #define TRACER_TRIG_DOUBLE_PRECISION 1
