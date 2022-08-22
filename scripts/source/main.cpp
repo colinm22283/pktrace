@@ -19,7 +19,7 @@ void Script::start()
     Global::fpsLimit = 10000000;
     Global::fpsOutput = false;
 
-    Engine::resizeWindow(1600, 900);
+    Engine::resizeWindow(800, 600);
 
     debugPrint("Generating object");
     World::objectCount = 9;
