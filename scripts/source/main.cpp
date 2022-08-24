@@ -11,6 +11,7 @@
 #include <camera.h>
 
 #include <object/sphere.h>
+#include <object/plane.h>
 #include <object/triangle.h>
 
 bool keyDown = false;
@@ -58,17 +59,17 @@ void Script::start()
             blankTexture,
             steelMat
         ),
-        (Object*)new Sphere( // back wall mirror
-            1000000,
-            VECTOR3(0, 0, 1000020),
-            blankTexture,
-            mirrorMat
-        ),
+//        (Object*)new Sphere( // back wall mirror
+//            1000000,
+//            VECTOR3(0, 0, 1000020),
+//            blankTexture,
+//            mirrorMat
+//        ),
         (Object*)new Sphere( // front wall mirror
             1000000,
             VECTOR3(0, 0, -1000020),
-            blankTexture,
-            mirrorMat
+            woodHorizontalTexture,
+            woodMat
         ),
         (Object*)new Sphere( // left wall
             1000000,
@@ -84,7 +85,7 @@ void Script::start()
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
         (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
-        (Object*)new Triangle(VECTOR3(-3, -3, 0), VECTOR3(3, -3, 0), VECTOR3(0, 6, 0)),
+        (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), tileMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
     };
     debugPrint("Generating lights");
