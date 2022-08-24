@@ -14,12 +14,32 @@
 
 bool keyDown = false;
 
+Texture* blankTexture;
+Texture* steelTexture;
+Texture* woodHorizontalTexture;
+Texture* floorTexture;
+
 void Script::start()
 {
     Global::fpsLimit = 10000000;
     Global::fpsOutput = false;
 
-    Engine::resizeWindow(800, 600);
+    Engine::resizeWindow(1200, 900);
+
+    debugPrint("Loading textures");
+    blankTexture = new Texture("textures/blank.bmp");
+    steelTexture = new Texture("textures/steel2.bmp", 0.9);
+    woodHorizontalTexture = new Texture("textures/woodHorizontal.bmp", 400000.0);
+    floorTexture = new Texture("textures/tile.bmp", 3.0);
+
+    debugPrint("Generating materials");
+    Material* steelMat = new Material(0.7, 0.3, 1.0);
+    Material* mirrorMat = new Material(0.95, 0.05, 1.0);
+    Material* woodMat = new Material(0.3, 0.7, 1.0);
+    Material* tileMat = new Material(0.1, 0.9, 1.0);
+
+    fcolor steelColor = FRGB(0.6863, 0.7529, 0.7922);
+    fcolor woodColor = FRGB255(163, 114, 83);
 
     debugPrint("Generating object");
     World::objectCount = 9;
@@ -28,52 +48,52 @@ void Script::start()
         (Object*)new Sphere( // floor
             1000000,
             VECTOR3(0, -1000020, 0),
-            FGS(1.0),
-            0.02, 0.8
+            floorTexture,
+            tileMat
         ),
         (Object*)new Sphere( // ceiling
             1000000,
             VECTOR3(0, 1000020, 0),
-            FGS(1.0),
-            0.02, 0.8
+            blankTexture,
+            steelMat
         ),
-        (Object*)new Sphere( // back wall
+        (Object*)new Sphere( // back wall mirror
             1000000,
             VECTOR3(0, 0, 1000020),
-            FGS(1.0),
-            1.0, 0.1
+            blankTexture,
+            mirrorMat
         ),
-        (Object*)new Sphere( // front wall
+        (Object*)new Sphere( // front wall mirror
             1000000,
             VECTOR3(0, 0, -1000020),
-            FGS(1.0),
-            1.0, 0.1
+            blankTexture,
+            mirrorMat
         ),
         (Object*)new Sphere( // left wall
             1000000,
             VECTOR3(-1000020, 0, 0),
-            FGS(1.0),
-            0.02, 0.8
+            woodHorizontalTexture,
+            woodMat
         ),
         (Object*)new Sphere( // right wall
             1000000,
             VECTOR3(1000020, 0, 0),
-            FGS(1.0),
-            0.02f,
-            0.8
+            woodHorizontalTexture,
+            woodMat
         ),
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), FGS(1.0f), 0.7, 0.5), // center sphere
-        (Object*)new Sphere(1, VECTOR3(0, 6, 3), FRGB255(0, 255, 0), 0.2f, 0.7),
-        (Object*)new Sphere(7, VECTOR3(0, 20, 0), FGS(1.0f), 1.0f, 0.1)
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
+        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
+        (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
     };
     debugPrint("Generating lights");
-    World::lightCount = 4;
+    World::lightCount = 1;
     World::lights = new Light[]
     {
-        Light(50.0, VECTOR3(-19, 19, -19), FGS(1.0f)),
-        Light(50.0, VECTOR3(-19, 19,  19), FGS(1.0f)),
-        Light(50.0, VECTOR3(19,  19, -19), FGS(1.0f)),
-        Light(50.0, VECTOR3(19,  19,  19), FGS(1.0f))
+        Light(400.0, VECTOR3(0, 19, 0), FGS(1.0f)),
+        Light(200.0, VECTOR3(-19, 19, -19), FGS(1.0f)),
+        Light(200.0, VECTOR3(-19, 19,  19), FGS(1.0f)),
+        Light(200.0, VECTOR3(19,  19, -19), FGS(1.0f)),
+        Light(200.0, VECTOR3(19,  19,  19), FGS(1.0f))
     };
 
     debugPrint("Translating camera");
@@ -97,6 +117,11 @@ void Script::update()
 void Script::exit()
 {
     World::cleanup();
+
+    delete blankTexture;
+    delete steelTexture;
+    delete woodHorizontalTexture;
+    delete floorTexture;
 }
 
 void Script::keyUp(SDL_Keysym keysym)

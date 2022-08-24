@@ -1,8 +1,10 @@
 #pragma once
 
-#include <math/vector.h>
-#include <object/object.h>
 #include <fcolor.h>
+
+#include <math/vector.h>
+
+#include <object/object.h>
 
 struct collisionResult
 {

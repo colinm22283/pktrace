@@ -19,7 +19,7 @@ Light::~Light()
 
 TRACER_FLOAT Light::intensityAt(TRACER_FLOAT distance)
 {
-    return intensity / LIGHT_DIV(distance);
+    return intensity / (4.0 * M_PIf64 * powf64(distance, 2.0));
 }
 TRACER_FLOAT Light::intensityAt(vector3 pos)
 {

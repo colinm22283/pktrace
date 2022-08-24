@@ -1,21 +1,22 @@
 #pragma once
 
-#include <object/object.h>
-
 #include <fcolor.h>
+#include <texture.h>
+#include <material.h>
+
+#include <object/object.h>
 
 class Sphere : public Object
 {
 public:
     Sphere();
-    Sphere(TRACER_FLOAT radius, vector3 position, fcolor col, TRACER_FLOAT reflectivity, TRACER_FLOAT diffuse);
+    Sphere(TRACER_FLOAT radius, vector3 position, Texture* tex, Material* mat);
 
     TRACER_FLOAT radius;
     vector3 position;
 
-    fcolor col;
-    TRACER_FLOAT reflectivity;
-    TRACER_FLOAT diffuse;
+    Texture* tex;
+    Material* material;
 
     collisionResult checkCollision(ray r);
 };

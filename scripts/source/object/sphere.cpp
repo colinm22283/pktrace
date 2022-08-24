@@ -1,6 +1,9 @@
 #include <cmath>
+#include <iostream>
 
 #include <misc/minMax.h>
+
+#include <math/trig.h>
 
 #include <camera.h>
 
@@ -8,7 +11,7 @@
 
 Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0))
 { }
-Sphere::Sphere(TRACER_FLOAT _radius, vector3 _position, fcolor _col, TRACER_FLOAT _reflectivity, TRACER_FLOAT _diffuse) : radius(_radius), position(_position), col(_col), reflectivity(_reflectivity), diffuse(_diffuse)
+Sphere::Sphere(TRACER_FLOAT _radius, vector3 _position, Texture* _tex, Material* mat) : radius(_radius), position(_position), tex(_tex), material(mat)
 { }
 
 collisionResult Sphere::checkCollision(ray r)
@@ -46,13 +49,16 @@ collisionResult Sphere::checkCollision(ray r)
 
     vector3 normal = normalize(collisionPoint - position);
 
+    TRACER_FLOAT pitch = ASIN(-normal.y);
+    TRACER_FLOAT yaw = ATAN2(normal.z, normal.x);
+
     return (collisionResult){
         true,
         collisionPoint,
         t,
         normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
-        reflectivity,
-        diffuse,
-        col
+        material->reflectivity,
+        material->diffuse,
+        colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0)))
     };
 }

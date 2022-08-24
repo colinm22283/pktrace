@@ -14,6 +14,10 @@ color fcolorToColor(fcolor fc)
         (uint8_t)CLAMP(fc.a * 255.0f, 0.0f, 255.0f)
     );
 }
+fcolor colorToFColor(color c)
+{
+    return FRGBA255(c.r, c.g, c.b, c.a);
+}
 
 fcolor fcolor::operator+(fcolor fc)
 {

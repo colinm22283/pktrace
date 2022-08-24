@@ -34,6 +34,6 @@ file(GLOB_RECURSE PeaKTrace_SOURCES CONFIGURE_DEPENDS "*.cpp")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-debug.*")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-release.*")
 
-add_executable(PeaKTrace ${PeaKTrace_SOURCES})
+add_executable(PeaKTrace ${PeaKTrace_SOURCES} scripts/source/texture.cpp)
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)

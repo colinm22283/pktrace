@@ -12,11 +12,7 @@
 
 #include <object/sphere.h>
 
-struct renderInstruction
-{
-    int x;
-    int y;
-};
+struct renderInstruction { int x; int y; };
 
 bool Tracer::ready = true;
 unsigned int currentInstruction;
@@ -24,12 +20,13 @@ unsigned int totalInstructions;
 renderInstruction* instructions;
 
 void tracerThread();
-fcolor tracerRecur(ray r, unsigned int currentIteration);
+fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDistance);
 
 unsigned int Tracer::width = TRACER_BUFFER_WIDTH;
 unsigned int Tracer::height = TRACER_BUFFER_HEIGHT;
 
 TRACER_FLOAT Tracer::aspectRatio = (TRACER_FLOAT)TRACER_BUFFER_WIDTH / (TRACER_FLOAT)TRACER_BUFFER_HEIGHT;
+TRACER_FLOAT Tracer::exposure = TRACER_EXPOSURE;
 
 color** Tracer::pixelBuf;
 
@@ -139,13 +136,13 @@ void tracerThread()
             COS(yaw) * COS(pitch)
         ) };
 
-        Tracer::pixelBuf[inst.x][inst.y] = fcolorToColor(tracerRecur(r, 1));
+        Tracer::pixelBuf[inst.x][inst.y] = fcolorToColor(tracerRecur(r, 1, 0) * FGS(TRACER_EXPOSURE));
 
 //        for (unsigned int i = 0; i < 100000; i++);
     }
 }
 
-fcolor tracerRecur(ray r, unsigned int currentIteration)
+fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDistance)
 {
     if (currentIteration > REFLECTION_RECURSION_LIMIT) return FGS(0);
 
@@ -163,7 +160,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
 
             collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized });
 
-            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(lightVecMagnitude)) * res.diffuse;
+            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(currentDistance + res.distance + lightVecMagnitude)) * res.diffuse;
         }
 
         return c + (tracerRecur(
@@ -171,7 +168,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
                 res.position + (normalize(res.result) * NEAR_CLIPPING_DISTANCE),
                 res.result
             },
-            currentIteration + 1
+            currentIteration + 1, currentDistance + res.distance
         ) * res.reflectivity * res.col);
     }
     else return SKYBOX_COLOR;
