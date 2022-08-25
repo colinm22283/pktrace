@@ -85,14 +85,14 @@ void Script::start()
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
         (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
-        (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), tileMat),
+        (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), mirrorMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
     };
     debugPrint("Generating lights");
     World::lightCount = 1;
     World::lights = new Light[]
     {
-        Light(400.0, VECTOR3(0, 19, 0), FGS(1.0f)),
+        Light(300.0, VECTOR3(0, 19, 0), FGS(1.0f)),
         Light(200.0, VECTOR3(-19, 19, -19), FGS(1.0f)),
         Light(200.0, VECTOR3(-19, 19,  19), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19, -19), FGS(1.0f)),

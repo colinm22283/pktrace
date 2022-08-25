@@ -34,6 +34,12 @@ file(GLOB_RECURSE PeaKTrace_SOURCES CONFIGURE_DEPENDS "*.cpp")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-debug.*")
 list(FILTER PeaKTrace_SOURCES EXCLUDE REGEX ".*cmake-build-release.*")
 
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    add_definitions(-DPEAK_ENGINE_DEBUG_MODE=1)
+else()
+    add_definitions(-DPEAK_ENGINE_DEBUG_MODE=0)
+endif()
+
 add_executable(PeaKTrace ${PeaKTrace_SOURCES})
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)

@@ -1,6 +1,10 @@
 #include <material.h>
 
-Material::Material() : reflectivity(0.0), diffuse(0.0), opacity(0.0)
+Material::Material() : Material(0.0, 0.0, 0.0, FGS(0))
 { }
-Material::Material(double _reflectivity, double _diffuse, double _opacity) : reflectivity(_reflectivity), diffuse(_diffuse), opacity(_opacity)
+Material::Material(TRACER_FLOAT _reflectivity, TRACER_FLOAT _diffuse) : Material(_reflectivity, _diffuse, 1.0, FGS(1.0))
+{ }
+Material::Material(TRACER_FLOAT _reflectivity, TRACER_FLOAT _diffuse, TRACER_FLOAT _opacity) : Material(_reflectivity, _diffuse, _opacity, FGS(1.0))
+{ }
+Material::Material(TRACER_FLOAT _reflectivity, TRACER_FLOAT _diffuse, TRACER_FLOAT _opacity, fcolor _col) : reflectivity(_reflectivity), diffuse(_diffuse), opacity(_opacity), col(_col)
 { }
