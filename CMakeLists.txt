@@ -40,6 +40,6 @@ else()
     add_definitions(-DPEAK_ENGINE_DEBUG_MODE=0)
 endif()
 
-add_executable(PeaKTrace ${PeaKTrace_SOURCES})
+add_executable(PeaKTrace ${PeaKTrace_SOURCES} scripts/header/object/cube.h scripts/source/object/cube.cpp)
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)

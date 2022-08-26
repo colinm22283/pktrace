@@ -13,6 +13,7 @@
 #include <object/sphere.h>
 #include <object/plane.h>
 #include <object/triangle.h>
+#include <object/cube.h>
 
 bool keyDown = false;
 
@@ -47,24 +48,24 @@ void Script::start()
     World::objectCount = 9;
     World::objects = new Object*[]
     {
-        (Object*)new Sphere( // floor
-            1000000,
-            VECTOR3(0, -1000020, 0),
+        (Object*)new Plane( // floor
+            VECTOR3(0, -20, 0),
+            VECTOR3(0, -1, 0),
             floorTexture,
             tileMat
         ),
-        (Object*)new Sphere( // ceiling
-            1000000,
-            VECTOR3(0, 1000020, 0),
+        (Object*)new Plane( // ceiling
+            VECTOR3(0, 20, 0),
+            VECTOR3(0, 1, 0),
             blankTexture,
             steelMat
         ),
-//        (Object*)new Sphere( // back wall mirror
-//            1000000,
-//            VECTOR3(0, 0, 1000020),
-//            blankTexture,
-//            mirrorMat
-//        ),
+        (Object*)new Plane( // back wall mirror
+            VECTOR3(0, 0, 20),
+            VECTOR3(0, 0, 1),
+            blankTexture,
+            mirrorMat
+        ),
         (Object*)new Sphere( // front wall mirror
             1000000,
             VECTOR3(0, 0, -1000020),
@@ -85,7 +86,8 @@ void Script::start()
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
         (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
-        (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), mirrorMat),
+        (Object*)new Cube(VECTOR3(3, -2, 3), 3),
+        (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
     };
     debugPrint("Generating lights");

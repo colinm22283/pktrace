@@ -7,7 +7,7 @@
 Plane::Plane() : position(VECTOR3(0.0, 0.0, 0.0)), normal(VECTOR3(0.0, 0.0, 0.0))
 { }
 
-Plane::Plane(vector3 _position, vector3 _normal, Material* _mat) : position(_position), normal(_normal), mat(_mat)
+Plane::Plane(vector3 _position, vector3 _normal, Texture* _tex, Material* _mat) : position(_position), normal(_normal), tex(_tex), mat(_mat)
 { }
 
 collisionResult Plane::checkCollision(ray r)
@@ -25,7 +25,7 @@ collisionResult Plane::checkCollision(ray r)
         normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
         mat->reflectivity,
         mat->diffuse,
-        FRGB255(255, 50, 50)
+        colorToFColor(tex->getPixel((int)t, (int)t))
     };
     else return { false };
 }
