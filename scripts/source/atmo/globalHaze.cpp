@@ -1,6 +1,6 @@
-#pragma once
-
 #include <world.h>
+
+#include <math/random.h>
 
 #include <atmo/globalHaze.h>
 
@@ -17,6 +17,6 @@ atmoResult GlobalHaze::checkPos(vector3 pos)
 
     return {
         true,
-        col * lightIntensity
+        col * lightIntensity * randomRange()
     };
 }

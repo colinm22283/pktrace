@@ -10,11 +10,14 @@
 #include <world.h>
 #include <camera.h>
 
+#include <math/random.h>
+
 #include <object/sphere.h>
 #include <object/plane.h>
 #include <object/triangle.h>
 
 #include <atmo/globalHaze.h>
+#include <atmo/sphereHaze.h>
 
 bool keyDown = false;
 
@@ -29,6 +32,9 @@ void Script::start()
     Global::fpsOutput = false;
 
     Engine::resizeWindow(1200, 900);
+
+    debugPrint("Loading random values");
+    randomInit();
 
     debugPrint("Loading textures");
     blankTexture = new Texture("textures/blank.bmp");
@@ -99,10 +105,11 @@ void Script::start()
     };
 
     debugPrint("Generating atmos");
-    World::atmoCount = 1;
+    World::atmoCount = 2;
     World::atmos = new Atmo*[]
     {
-        (Atmo*)new GlobalHaze(FGS(50))
+        (Atmo*)new GlobalHaze(FGS(0.00025)),
+        (Atmo*)new SphereHaze(FGS(0.01), VECTOR3(0.0, 5, -5), 2)
     };
 
     debugPrint("Translating camera");

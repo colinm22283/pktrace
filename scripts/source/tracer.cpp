@@ -163,6 +163,21 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
             if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(currentDistance + res.distance + lightVecMagnitude)) * res.diffuse;
         }
 
+        fcolor atmoEffect = FGS(0.0);
+        for (TRACER_FLOAT i = 0.0; i < res.distance; i += ATMO_PROBE_SPACING)
+        {
+            vector3 pos = r.direction * i + r.origin;
+
+            for (unsigned int j = 0; j < World::atmoCount; j++)
+            {
+                atmoResult aRes = World::atmos[j]->checkPos(pos);
+
+                if (aRes.hit) atmoEffect += aRes.col * ATMO_PROBE_SPACING;
+            }
+        }
+
+        c += atmoEffect;
+
         return c + (tracerRecur(
             (ray) {
                 res.position + (normalize(res.result) * NEAR_CLIPPING_DISTANCE),
