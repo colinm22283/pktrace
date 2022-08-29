@@ -1,9 +1,11 @@
 #include <world.h>
 
-unsigned int World::objectCount;
-Object** World::objects;
-unsigned int World::lightCount;
-Light* World::lights;
+unsigned int World::objectCount = 0;
+Object** World::objects = nullptr;
+unsigned int World::lightCount = 0;
+Light* World::lights = nullptr;
+unsigned int World::atmoCount = 0;
+Atmo** World::atmos = nullptr;
 
 void World::cleanup()
 {

@@ -2,6 +2,7 @@
 
 #include <light.h>
 #include <object/object.h>
+#include <atmo/atmo.h>
 
 namespace World
 {
@@ -9,6 +10,8 @@ namespace World
     extern Object** objects;
     extern unsigned int lightCount;
     extern Light* lights;
+    extern unsigned int atmoCount;
+    extern Atmo** atmos;
 
     void cleanup();
 

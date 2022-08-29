@@ -13,7 +13,8 @@
 #include <object/sphere.h>
 #include <object/plane.h>
 #include <object/triangle.h>
-#include <object/cube.h>
+
+#include <atmo/globalHaze.h>
 
 bool keyDown = false;
 
@@ -41,11 +42,8 @@ void Script::start()
     Material* woodMat = new Material(0.3, 0.7, 1.0);
     Material* tileMat = new Material(0.1, 0.9, 1.0);
 
-    fcolor steelColor = FRGB(0.6863, 0.7529, 0.7922);
-    fcolor woodColor = FRGB255(163, 114, 83);
-
     debugPrint("Generating object");
-    World::objectCount = 9;
+    World::objectCount = 10;
     World::objects = new Object*[]
     {
         (Object*)new Plane( // floor
@@ -86,7 +84,6 @@ void Script::start()
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
         (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
-        (Object*)new Cube(VECTOR3(3, -2, 3), 3),
         (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
     };
@@ -99,6 +96,13 @@ void Script::start()
         Light(200.0, VECTOR3(-19, 19,  19), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19, -19), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19,  19), FGS(1.0f))
+    };
+
+    debugPrint("Generating atmos");
+    World::atmoCount = 1;
+    World::atmos = new Atmo*[]
+    {
+        (Atmo*)new GlobalHaze(FGS(50))
     };
 
     debugPrint("Translating camera");
