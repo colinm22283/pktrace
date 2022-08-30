@@ -49,7 +49,7 @@ void Script::start()
     Material* tileMat = new Material(0.1, 0.9, 1.0);
 
     debugPrint("Generating object");
-    World::objectCount = 10;
+    World::objectCount = 8;
     World::objects = new Object*[]
     {
         (Object*)new Plane( // floor
@@ -89,7 +89,7 @@ void Script::start()
             woodMat
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
-        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
+//        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
         (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
     };
@@ -105,11 +105,11 @@ void Script::start()
     };
 
     debugPrint("Generating atmos");
-    World::atmoCount = 2;
+    World::atmoCount = 0;
     World::atmos = new Atmo*[]
     {
-        (Atmo*)new GlobalHaze(FGS(0.00025)),
-        (Atmo*)new SphereHaze(FGS(0.01), VECTOR3(0.0, 5, -5), 2)
+        (Atmo*)new GlobalHaze(FGS(0.001)),
+        (Atmo*)new SphereHaze(FGS(0.1), VECTOR3(0.0, 5, -5), 2)
     };
 
     debugPrint("Translating camera");

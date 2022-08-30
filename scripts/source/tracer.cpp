@@ -174,6 +174,8 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
 
                 if (aRes.hit) atmoEffect += aRes.col * ATMO_PROBE_SPACING;
             }
+
+//            atmoEffect = atmoEffect / res.distance;
         }
 
         c += atmoEffect;

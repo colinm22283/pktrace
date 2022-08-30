@@ -4,7 +4,7 @@
 
 #include <atmo/globalHaze.h>
 
-GlobalHaze::GlobalHaze() : GlobalHaze(FGS(50.0))
+GlobalHaze::GlobalHaze() : GlobalHaze(FGS(0.0))
 { }
 
 GlobalHaze::GlobalHaze(fcolor _col) : col(_col)
@@ -19,4 +19,6 @@ atmoResult GlobalHaze::checkPos(vector3 pos)
         true,
         col * lightIntensity * randomRange()
     };
+
+    // TODO: change to mafs ong fr
 }

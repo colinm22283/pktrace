@@ -22,5 +22,4 @@ atmoResult SphereHaze::checkPos(vector3 pos)
         col * lightIntensity * randomRange()
     };
     else return { false };
-
 }
