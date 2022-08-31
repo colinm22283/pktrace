@@ -158,9 +158,15 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
             TRACER_FLOAT lightVecMagnitude = magnitude(lightVec);
             vector3 lightVecNormalized = lightVec / lightVecMagnitude;
 
-            collisionResult lightRes = World::raycast({ res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized });
+            collisionResult lightRes = World::raycast(
+                    {res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized});
 
-            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col * World::lights[i].intensityAt(currentDistance + res.distance + lightVecMagnitude)) * res.diffuse;
+            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (World::lights[i].col *
+                                                                                        World::lights[i].intensityAt(
+                                                                                                currentDistance +
+                                                                                                res.distance +
+                                                                                                lightVecMagnitude)) *
+                                                                             res.diffuse;
         }
 
         fcolor atmoEffect = FGS(0.0);
@@ -180,13 +186,26 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
 
         c += atmoEffect;
 
-        return c + (tracerRecur(
+        if (res.transparency == 0) return c + (tracerRecur(
             (ray) {
                 res.position + (normalize(res.result) * NEAR_CLIPPING_DISTANCE),
                 res.result
             },
             currentIteration + 1, currentDistance + res.distance
         ) * res.reflectivity * res.col);
+        else return c + (tracerRecur(
+            (ray){
+                res.position + (normalize(res.result) * NEAR_CLIPPING_DISTANCE),
+                res.result
+            },
+            currentIteration + 1, currentDistance + res.distance
+        ) * res.reflectivity * res.col) + (tracerRecur(
+            (ray){
+                res.transparencyPos + (normalize(res.transparencyDir) * NEAR_CLIPPING_DISTANCE),
+                res.transparencyDir
+            },
+            currentIteration + 1, currentDistance + res.distance
+        ) * res.transparency * res.col);
     }
     else return SKYBOX_COLOR;
 }

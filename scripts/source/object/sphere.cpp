@@ -4,14 +4,20 @@
 #include <misc/minMax.h>
 
 #include <math/trig.h>
+#include <math/random.h>
 
 #include <camera.h>
 
 #include <object/sphere.h>
 
-Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0))
+Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0)), tex(nullptr), material(nullptr), ng(nullptr)
 { }
-Sphere::Sphere(TRACER_FLOAT _radius, vector3 _position, Texture* _tex, Material* mat) : radius(_radius), position(_position), tex(_tex), material(mat)
+Sphere::Sphere(TRACER_FLOAT _radius, vector3 _position, Texture* _tex, Material* mat) :
+    radius(_radius),
+    position(_position),
+    tex(_tex),
+    material(mat),
+    ng(createNoiseGenerator(100000))
 { }
 
 collisionResult Sphere::checkCollision(ray r)
@@ -38,6 +44,7 @@ collisionResult Sphere::checkCollision(ray r)
     }
 
     TRACER_FLOAT t = MIN(t0, t1);
+    TRACER_FLOAT t2 = MAX(t0, t1);
 
     if (t < 0)
     {
@@ -56,9 +63,16 @@ collisionResult Sphere::checkCollision(ray r)
         true,
         collisionPoint,
         t,
-        normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
-        material->reflectivity,
-        material->diffuse,
-        colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0)))
+        normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))) + VECTOR3(
+            nextNoiseValue(ng),
+            nextNoiseValue(ng),
+            nextNoiseValue(ng)
+        ),
+        material->reflectivity * material->opacity,//magnitude(normalize(position - collisionPoint) - r.direction),
+        material->diffuse * material->opacity,
+        colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0))),
+        1.0 - material->opacity,
+        r.origin + (r.direction * t2),
+        r.direction
     };
 }

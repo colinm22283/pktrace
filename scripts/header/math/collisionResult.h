@@ -15,4 +15,7 @@ struct collisionResult
     TRACER_FLOAT reflectivity;
     TRACER_FLOAT diffuse;
     fcolor col;
+    TRACER_FLOAT transparency;
+    vector3 transparencyPos;
+    vector3 transparencyDir;
 };

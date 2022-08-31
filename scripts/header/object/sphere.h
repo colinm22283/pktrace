@@ -4,6 +4,8 @@
 #include <texture.h>
 #include <material.h>
 
+#include <math/noise.h>
+
 #include <object/object.h>
 
 class Sphere : public Object
@@ -19,4 +21,7 @@ public:
     Material* material;
 
     collisionResult checkCollision(ray r);
+
+protected:
+    noiseGenerator* ng;
 };

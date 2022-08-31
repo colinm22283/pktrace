@@ -43,10 +43,11 @@ void Script::start()
     floorTexture = new Texture("textures/tile.bmp", 3.0);
 
     debugPrint("Generating materials");
-    Material* steelMat = new Material(0.7, 0.3, 1.0);
-    Material* mirrorMat = new Material(0.95, 0.05, 1.0);
-    Material* woodMat = new Material(0.3, 0.7, 1.0);
-    Material* tileMat = new Material(0.1, 0.9, 1.0);
+    Material* steelMat = new Material(0.9, 0.7, 0.1, 1.0);
+    Material* mirrorMat = new Material(0.95, 0.0, 0.05, 1.0);
+    Material* woodMat = new Material(0.2, 0.9, 0.7, 1.0);
+    Material* tileMat = new Material(0.1, 0.2, 0.9, 1.0);
+    Material* glassMat = new Material(0.9, 0.1, 0.2, 0.2);
 
     debugPrint("Generating object");
     World::objectCount = 8;
@@ -88,7 +89,7 @@ void Script::start()
             woodHorizontalTexture,
             woodMat
         ),
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, steelMat), // center sphere
 //        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
         (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
@@ -151,7 +152,7 @@ void Script::keyUp(SDL_Keysym keysym)
         Camera::position.x = sin(-Camera::rotation.y) * 10;
         Camera::position.z = -cos(-Camera::rotation.y) * 10;
 
-//        new std::thread(Tracer::update);
-        Tracer::update();
+        new std::thread(Tracer::update);
+//        Tracer::update();
     }
 }
