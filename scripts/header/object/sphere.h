@@ -23,5 +23,6 @@ public:
     collisionResult checkCollision(ray r);
 
 protected:
-    noiseGenerator* ng;
+    Noise1D* noise;
+    TRACER_FLOAT noisePos;
 };

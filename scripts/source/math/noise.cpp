@@ -18,7 +18,7 @@ Noise1D::Noise1D(int _loopLength) : randoms(new TRACER_FLOAT[_loopLength])
 
 TRACER_FLOAT Noise1D::getValue(TRACER_FLOAT i)
 {
-    int iMin = (int)i % (loopLength - 1);
+    int iMin = (int)i % loopLength;
     TRACER_FLOAT t = i - iMin;
 
     return lerp(randoms[iMin], randoms[iMin + 1], t);

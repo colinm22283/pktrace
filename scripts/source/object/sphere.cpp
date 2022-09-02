@@ -10,14 +10,15 @@
 
 #include <object/sphere.h>
 
-Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0)), tex(nullptr), material(nullptr), ng(nullptr)
+Sphere::Sphere() : radius(0), position(VECTOR3(0, 0, 0)), tex(nullptr), material(nullptr), noise(nullptr)
 { }
 Sphere::Sphere(TRACER_FLOAT _radius, vector3 _position, Texture* _tex, Material* mat) :
     radius(_radius),
     position(_position),
     tex(_tex),
     material(mat),
-    ng(createNoiseGenerator(100000))
+    noise(new Noise1D(10)),
+    noisePos(0.0)
 { }
 
 collisionResult Sphere::checkCollision(ray r)
@@ -59,15 +60,13 @@ collisionResult Sphere::checkCollision(ray r)
     TRACER_FLOAT pitch = ASIN(-normal.y);
     TRACER_FLOAT yaw = ATAN2(normal.z, normal.x);
 
+    noisePos += 0.3;
+
     return (collisionResult){
         true,
         collisionPoint,
         t,
-        normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))) + VECTOR3(
-            nextNoiseValue(ng),
-            nextNoiseValue(ng),
-            nextNoiseValue(ng)
-        ),
+        normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
         material->reflectivity * material->opacity,//magnitude(normalize(position - collisionPoint) - r.direction),
         material->diffuse * material->opacity,
         colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0))),

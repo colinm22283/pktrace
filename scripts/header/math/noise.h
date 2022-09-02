@@ -12,5 +12,5 @@ public:
 
 protected:
     TRACER_FLOAT* randoms;
-    int loopLength
+    int loopLength;
 };
