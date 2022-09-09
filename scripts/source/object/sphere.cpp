@@ -72,6 +72,7 @@ collisionResult Sphere::checkCollision(ray r)
         colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0))),
         1.0 - material->opacity,
         r.origin + (r.direction * t2),
-        r.direction
+        r.direction,
+        normal
     };
 }

@@ -18,4 +18,5 @@ struct collisionResult
     TRACER_FLOAT transparency;
     vector3 transparencyPos;
     vector3 transparencyDir;
+    vector3 normal;
 };

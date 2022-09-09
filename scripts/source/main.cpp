@@ -22,6 +22,7 @@
 bool keyDown = false;
 
 Texture* blankTexture;
+Texture* redTexture;
 Texture* steelTexture;
 Texture* woodHorizontalTexture;
 Texture* floorTexture;
@@ -34,23 +35,25 @@ void Script::start()
     Global::fpsLimit = 10000000;
     Global::fpsOutput = false;
 
-    Engine::resizeWindow(1200, 900);
+    Engine::resizeWindow(800, 600);
 
     debugPrint("Loading random values");
     randomInit();
 
     debugPrint("Loading textures");
     blankTexture = new Texture("textures/blank.bmp");
+    redTexture = new Texture("textures/red.bmp");
     steelTexture = new Texture("textures/steel2.bmp", 0.9);
     woodHorizontalTexture = new Texture("textures/woodHorizontal.bmp", 400000.0);
     floorTexture = new Texture("textures/tile.bmp", 3.0);
 
     debugPrint("Generating materials");
-    Material* steelMat = new Material(0.9, 0.0, 0.1, 1.0);
+    Material* steelMat = new Material(0.4, 0.0, 0.6, 1.0);
     Material* mirrorMat = new Material(0.95, 0.0, 0.05, 1.0);
-    Material* woodMat = new Material(0.2, 0.0, 0.7, 1.0);
+    Material* woodMat = new Material(0.05, 0.0, 0.95, 1.0);
     Material* tileMat = new Material(0.1, 0.0, 0.9, 1.0);
     Material* glassMat = new Material(0.9, 0.0, 0.2, 0.2);
+    Material* matteMat = new Material(0.0, 0.0, 1.0, 1.0);
 
     debugPrint("Generating object");
     World::objectCount = 7;
@@ -59,14 +62,14 @@ void Script::start()
         (Object*)new Sphere( // floor
             1000000,
             VECTOR3(0, -1000020, 0),
-            floorTexture,
+            redTexture,
             tileMat
         ),
         (Object*)new Sphere( // ceiling
             1000000,
             VECTOR3(0, 1000020, 0),
             blankTexture,
-            steelMat
+            tileMat
         ),
         (Object*)new Sphere( // back wall mirror
             1000000,
@@ -92,7 +95,7 @@ void Script::start()
             woodHorizontalTexture,
             woodMat
         ),
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, matteMat), // center sphere
         (Object*)new Cube(VECTOR3(-5, -5, -5), VECTOR3(-2, -2, -2)), // center cube
 //        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
         (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),

@@ -8,13 +8,18 @@
 #include <tracer.h>
 #include <world.h>
 #include <camera.h>
+
 #include <math/trig.h>
+#include <math/random.h>
+#include <math/matrix.h>
 
 #include <object/sphere.h>
 
 struct renderInstruction { int x; int y; };
 
 bool Tracer::ready = true;
+bool Tracer::indirectLighting = INDIRECT_LIGHTING;
+
 unsigned int currentInstruction;
 unsigned int totalInstructions;
 renderInstruction* instructions;
@@ -152,19 +157,51 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
     {
         fcolor c = FGS(0);
 
+        // DIRECT LIGHTING
         for (unsigned int i = 0; i < World::lightCount; i++)
         {
             vector3 lightVec = World::lights[i].position - res.position;
             TRACER_FLOAT lightVecMagnitude = magnitude(lightVec);
             vector3 lightVecNormalized = lightVec / lightVecMagnitude;
 
-            collisionResult lightRes = World::raycast(
-                    {res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE), lightVecNormalized});
-
-            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c += res.col * (
+            collisionResult lightRes = World::raycast((ray) {
+                res.position + (lightVecNormalized * NEAR_CLIPPING_DISTANCE),
+                lightVecNormalized
+            });
+            if (!lightRes.hit || lightRes.distance > lightVecMagnitude) c +=
+                res.col *
                 World::lights[i].col *
-                World::lights[i].intensityAt(currentDistance + res.distance + lightVecMagnitude)
-            ) * res.diffuse;
+                World::lights[i].intensityAt(currentDistance + res.distance + lightVecMagnitude) *
+                (res.diffuse / (INDIRECT_LIGHTING_RECURSIONS + 1));
+        }
+
+        // INDIRECT LIGHTING
+        if (Tracer::indirectLighting)
+        {
+            fcolor indirectColoring = FGS(0.0);
+
+            for (unsigned int j = 0; j < INDIRECT_LIGHTING_RECURSIONS; j++)
+            {
+                TRACER_FLOAT theta0 = randomRange(-0.4 * M_PIf64, 0.4 * M_PIf64);
+                TRACER_FLOAT theta1 = randomRange(-0.4 * M_PIf64, 0.4 * M_PIf64);
+
+                matrix3 mat = matrix3::rotMat(theta0, theta1, 0.0);
+
+                vector3 rayDir = normalize(mat * res.normal);
+
+                indirectColoring += tracerRecur(
+                    (ray){
+                        res.position + (rayDir * NEAR_CLIPPING_DISTANCE),
+                        rayDir
+                    },
+                    currentIteration + 1,
+                    currentDistance
+                ) * COS(theta0);
+            }
+
+            indirectColoring = indirectColoring / INDIRECT_LIGHTING_RECURSIONS;
+
+            c += res.col * indirectColoring * ((res.diffuse / (INDIRECT_LIGHTING_RECURSIONS + 1) * INDIRECT_LIGHTING_RECURSIONS));
         }
 
         if (res.transparency == 0) return c + (tracerRecur(

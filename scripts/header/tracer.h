@@ -8,10 +8,14 @@
 namespace Tracer
 {
     extern bool ready;
+    extern bool indirectLighting;
+
     extern unsigned int width;
     extern unsigned int height;
+
     extern TRACER_FLOAT aspectRatio;
     extern TRACER_FLOAT exposure;
+
     extern color** pixelBuf;
 
     void init();

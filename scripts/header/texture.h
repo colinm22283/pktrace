@@ -12,6 +12,7 @@ public:
     double scale;
 
     color getPixel(int x, int y);
+
 protected:
     img* tex;
 };
