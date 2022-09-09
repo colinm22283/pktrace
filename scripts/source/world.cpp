@@ -5,7 +5,6 @@ Object** World::objects = nullptr;
 unsigned int World::lightCount = 0;
 Light* World::lights = nullptr;
 unsigned int World::atmoCount = 0;
-Atmo** World::atmos = nullptr;
 
 void World::cleanup()
 {

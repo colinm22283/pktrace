@@ -67,7 +67,7 @@ collisionResult Sphere::checkCollision(ray r)
         collisionPoint,
         t,
         normalize(r.direction - (normal * (2 * dotProd(r.direction, normal)))),
-        material->reflectivity * material->opacity,//magnitude(normalize(position - collisionPoint) - r.direction),
+        material->reflectivity * material->opacity,
         material->diffuse * material->opacity,
         colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0))),
         1.0 - material->opacity,

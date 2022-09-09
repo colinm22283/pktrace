@@ -24,7 +24,7 @@ collisionResult Cube::checkCollision(ray r)
     if (tyMin > tyMax)
     {
         TRACER_FLOAT temp = tyMin;
-        tyMin = tMax;
+        tyMin = tyMax;
         tyMax = temp;
     }
 
@@ -39,7 +39,7 @@ collisionResult Cube::checkCollision(ray r)
     if (tzMin > tzMax)
     {
         TRACER_FLOAT temp = tzMin;
-        tzMin = tMax;
+        tzMin = tzMax;
         tzMax = temp;
     }
 
@@ -55,8 +55,8 @@ collisionResult Cube::checkCollision(ray r)
         VECTOR3(0, 0, 0),
         0,
         VECTOR3(0, 0, 0),
-        0.0,
-        0.0,
-        FGS(200)
+        0.5,
+        1.0,
+        FRGB255(255, 0, 0)
     };
 }

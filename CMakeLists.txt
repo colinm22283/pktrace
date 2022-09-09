@@ -40,6 +40,6 @@ else()
     add_definitions(-DPEAK_ENGINE_DEBUG_MODE=0)
 endif()
 
-add_executable(PeaKTrace ${PeaKTrace_SOURCES} scripts/header/object/cube.h scripts/source/object/cube.cpp scripts/header/atmo/atmo.h scripts/header/atmo/globalHaze.h scripts/source/atmo/atmo.cpp scripts/source/atmo/globalHaze.cpp scripts/header/math/atmoResult.h scripts/header/math/random.h scripts/source/math/random.cpp scripts/source/atmo/sphereHaze.cpp scripts/header/atmo/sphereHaze.h scripts/header/math/noise.h scripts/header/math/lerp.h scripts/source/math/lerp.cpp scripts/source/math/noise.cpp)
+add_executable(PeaKTrace ${PeaKTrace_SOURCES})
 
 target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)

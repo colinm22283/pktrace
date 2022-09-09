@@ -15,9 +15,7 @@
 #include <object/sphere.h>
 #include <object/plane.h>
 #include <object/triangle.h>
-
-#include <atmo/globalHaze.h>
-#include <atmo/sphereHaze.h>
+#include <object/cube.h>
 
 #include <math/noise.h>
 
@@ -95,6 +93,7 @@ void Script::start()
             woodMat
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), steelTexture, steelMat), // center sphere
+        (Object*)new Cube(VECTOR3(-5, -5, -5), VECTOR3(-2, -2, -2)), // center cube
 //        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
         (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),
         (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
@@ -108,14 +107,6 @@ void Script::start()
         Light(200.0, VECTOR3(-19, 19,  19), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19, -19), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19,  19), FGS(1.0f))
-    };
-
-    debugPrint("Generating atmos");
-    World::atmoCount = 0;
-    World::atmos = new Atmo*[]
-    {
-        (Atmo*)new GlobalHaze(FGS(0.001)),
-        (Atmo*)new SphereHaze(FGS(0.1), VECTOR3(0.0, 5, -5), 2)
     };
 
     debugPrint("Translating camera");
