@@ -20,14 +20,14 @@ TRACER_FLOAT randomRange()
 
     return randValues[currentPos];
 }
-TRACER_FLOAT randomRange(double max)
+TRACER_FLOAT randomRange(const double max)
 {
     currentPos++;
     if (currentPos > RANDOM_VALUE_COUNT) currentPos = 0;
 
     return randValues[currentPos] * max;
 }
-TRACER_FLOAT randomRange(double min, double max)
+TRACER_FLOAT randomRange(const double min, const double max)
 {
     currentPos++;
     if (currentPos > RANDOM_VALUE_COUNT) currentPos = 0;

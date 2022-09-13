@@ -15,6 +15,7 @@ namespace Tracer
 
     extern TRACER_FLOAT aspectRatio;
     extern TRACER_FLOAT exposure;
+    extern TRACER_FLOAT dynamicRange;
 
     extern color** pixelBuf;
 

@@ -28,14 +28,12 @@ fcolor fcolor::operator+(fcolor fc)
         FCOLOR_FUNCTION(a + fc.a)
     );
 }
-fcolor fcolor::operator+=(fcolor fc)
+void fcolor::operator+=(fcolor fc)
 {
     r = FCOLOR_FUNCTION(r + fc.r);
     g = FCOLOR_FUNCTION(g + fc.g);
     b = FCOLOR_FUNCTION(b + fc.b);
     a = FCOLOR_FUNCTION(a + fc.a);
-
-    return *this;
 }
 
 fcolor fcolor::operator-(fcolor fc)
@@ -65,6 +63,20 @@ fcolor fcolor::operator*(fcolor fc)
         FCOLOR_FUNCTION(b * fc.b),
         FCOLOR_FUNCTION(a * fc.a)
     );
+}
+void fcolor::operator*=(TRACER_FLOAT x)
+{
+    r *= x;
+    g *= x;
+    b *= x;
+    a *= x;
+}
+void fcolor::operator*=(fcolor fc)
+{
+    r *= fc.r;
+    g *= fc.g;
+    b *= fc.b;
+    a *= fc.a;
 }
 
 fcolor fcolor::operator/(TRACER_FLOAT x)

@@ -25,13 +25,15 @@ unsigned int totalInstructions;
 renderInstruction* instructions;
 
 void tracerThread();
-fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDistance);
+fcolor tracerRecur(ray r, unsigned int currentIteration);
+TRACER_FLOAT lightMult(TRACER_FLOAT distance);
 
 unsigned int Tracer::width = TRACER_BUFFER_WIDTH;
 unsigned int Tracer::height = TRACER_BUFFER_HEIGHT;
 
 TRACER_FLOAT Tracer::aspectRatio = (TRACER_FLOAT)TRACER_BUFFER_WIDTH / (TRACER_FLOAT)TRACER_BUFFER_HEIGHT;
 TRACER_FLOAT Tracer::exposure = TRACER_EXPOSURE;
+TRACER_FLOAT Tracer::dynamicRange = DYNAMIC_RANGE;
 
 color** Tracer::pixelBuf;
 
@@ -141,11 +143,114 @@ void tracerThread()
             COS(yaw) * COS(pitch)
         ) };
 
-        Tracer::pixelBuf[inst.x][inst.y] = fcolorToColor(tracerRecur(r, 1, 0) * FGS(TRACER_EXPOSURE));
-
-//        for (unsigned int i = 0; i < 100000; i++);
+        Tracer::pixelBuf[inst.x][inst.y] = fcolorToColor(tracerRecur(r, 1) * FGS(Tracer::exposure) - FGS(Tracer::dynamicRange));
     }
 }
+
+#define USING_NEW_TRACER_FUNCTION 1
+#if USING_NEW_TRACER_FUNCTION
+
+fcolor tracerRecur(ray r, unsigned int currentIteration)
+{
+    if (currentIteration > REFLECTION_RECURSION_LIMIT) return FGS(0);
+
+    collisionResult res = World::raycast(r);
+
+    if (!res.hit) return SKYBOX_COLOR;
+
+    // CALCULATE DIRECT LIGHTING
+    fcolor directLighting = FGS(0.0);
+    for (int i = 0; i < World::lightCount; i++)
+    {
+        // calc light vectors
+        vector3 lightDisplacement = World::lights[i].position - res.position;
+        TRACER_FLOAT lightMagnitude = magnitude(lightDisplacement);
+        vector3 lightNormalized = lightDisplacement / lightMagnitude;
+
+        // cast a ray towards the light
+        collisionResult lightRes = World::raycast((ray){
+            res.position + (lightNormalized * NEAR_CLIPPING_DISTANCE),
+            lightNormalized
+        });
+
+        // check if ray reached the light
+        if (!lightRes.hit || lightRes.distance > lightMagnitude)
+        {
+            directLighting +=
+                World::lights[i].col * //                  light color
+                World::lights[i].intensity * //            light intensity
+                lightMult(lightMagnitude); //      light distance
+        }
+    }
+
+    fcolor indirectLighting = FGS(0.0);
+    if (Tracer::indirectLighting)
+    {
+        for (unsigned int i = 0; i < INDIRECT_LIGHTING_RECURSIONS; i++) // TODO: reduce INDIRECT_LIGHTING_RECURSIONS based on roughness
+        {
+            // generate random angles
+//            TRACER_FLOAT theta0 = ASIN(randomRange(-0.3, 0.3));
+//            TRACER_FLOAT theta1 = ASIN(randomRange(-0.3, 0.3));
+            TRACER_FLOAT range = (1.0 - res.reflectivity) * M_PIf64 / 2;
+            TRACER_FLOAT theta0 = randomRange(-range, range);
+            TRACER_FLOAT theta1 = randomRange(-range, range);
+
+//            std::cout << "T0: " << theta0 << "\n";
+//            std::cout << "T1: " << theta1 << "\n";
+
+            vector3 normalNormalized = normalize(res.normal);
+
+            TRACER_FLOAT theta0cos = COS(theta0);
+            TRACER_FLOAT theta0sin = SIN(theta0);
+            TRACER_FLOAT theta1cos = COS(theta1);
+            TRACER_FLOAT theta1sin = SIN(theta1);
+
+            vector2 angles = VECTOR2(
+                    ATAN2(sqrtf64(powf64(normalNormalized.x, 2.0) + powf64(normalNormalized.z, 2.0)), normalNormalized.y) + theta0,
+                    ATAN2(normalNormalized.z, normalNormalized.x) + theta1
+            );
+
+//            vector3 rayDirPre = VECTOR3(
+//                (normalNormalized.x * theta0cos) + (normalNormalized.z * theta0sin),
+//                normalNormalized.y,
+//                (-normalNormalized.x * theta0sin) + (normalNormalized.z * theta0cos)
+//            );
+//
+//            vector3 rayDir = VECTOR3(
+//                    rayDirPre.x ,
+//                    (rayDirPre.y * theta0cos) - (rayDirPre.z * theta1sin),
+//                    (rayDirPre.y * theta1sin) + (rayDirPre.z * theta1cos)
+//            );
+
+            vector3 rayDir = VECTOR3(
+                SIN(angles.x) * COS(angles.y),
+                SIN(angles.x) * SIN(angles.y),
+                COS(angles.x)
+            );
+
+            // TODO: finish this shid
+
+            indirectLighting +=
+                tracerRecur(
+                    (ray){
+                        res.position + (normalNormalized * NEAR_CLIPPING_DISTANCE),
+                        rayDir
+                    },
+                    currentIteration + 1
+                ); //              raycast value
+        }
+
+        indirectLighting = indirectLighting / INDIRECT_LIGHTING_RECURSIONS; // TODO: implement /=
+    }
+
+//    std::cout << "DIRECT: (" << directLighting.r << ", " << directLighting.g << ", " << directLighting.b << ")\n";
+//    std::cout << "INDIRECT: (" << indirectLighting.r << ", " << indirectLighting.g << ", " << indirectLighting.b << ")\n";
+
+    if (Tracer::indirectLighting) return (directLighting + indirectLighting) / 2 * res.col;
+    else  return directLighting * res.col;
+}
+
+#else
 
 fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDistance)
 {
@@ -172,7 +277,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
                 res.col *
                 World::lights[i].col *
                 World::lights[i].intensityAt(currentDistance + res.distance + lightVecMagnitude) *
-                (res.diffuse / (INDIRECT_LIGHTING_RECURSIONS + 1));
+                res.diffuse;
         }
 
         // INDIRECT LIGHTING
@@ -196,7 +301,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
                     },
                     currentIteration + 1,
                     currentDistance
-                ) * COS(theta0);
+                );
             }
 
             indirectColoring = indirectColoring / INDIRECT_LIGHTING_RECURSIONS;
@@ -210,7 +315,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
                 res.result
             },
             currentIteration + 1, currentDistance + res.distance
-        ) * res.reflectivity);
+        ) * res.reflectivity * res.col);
         else return c + (tracerRecur(
             (ray){
                 res.position + (normalize(res.result) * NEAR_CLIPPING_DISTANCE),
@@ -226,4 +331,11 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, TRACER_FLOAT currentDis
         ) * res.transparency * res.col);
     }
     else return SKYBOX_COLOR;
+}
+
+#endif
+
+TRACER_FLOAT lightMult(TRACER_FLOAT distance)
+{
+    return 1.0 / (4.0 * M_PIf64 * powf64(distance, 1.0));
 }

@@ -48,7 +48,7 @@ void Script::start()
     floorTexture = new Texture("textures/tile.bmp", 3.0);
 
     debugPrint("Generating materials");
-    Material* steelMat = new Material(0.4, 0.0, 0.6, 1.0);
+    Material* steelMat = new Material(0.4, 0.0, 0.2, 1.0);
     Material* mirrorMat = new Material(0.95, 0.0, 0.05, 1.0);
     Material* woodMat = new Material(0.05, 0.0, 0.95, 1.0);
     Material* tileMat = new Material(0.1, 0.0, 0.9, 1.0);
@@ -74,8 +74,8 @@ void Script::start()
         (Object*)new Sphere( // back wall mirror
             1000000,
             VECTOR3(0, 0, 1000020),
-            blankTexture,
-            mirrorMat
+            woodHorizontalTexture,
+            woodMat
         ),
         (Object*)new Sphere( // front wall mirror
             1000000,
@@ -95,26 +95,22 @@ void Script::start()
             woodHorizontalTexture,
             woodMat
         ),
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, matteMat), // center sphere
-        (Object*)new Cube(VECTOR3(-5, -5, -5), VECTOR3(-2, -2, -2)), // center cube
-//        (Object*)new Sphere(1, VECTOR3(0, 3, 3), steelTexture, steelMat),
-        (Object*)new Plane(VECTOR3(0, 0, 20), VECTOR3(0, 0, 1), woodHorizontalTexture, woodMat),
-        (Object*)new Sphere(7, VECTOR3(0, 0, 20), blankTexture, mirrorMat)
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, mirrorMat) // center sphere
     };
     debugPrint("Generating lights");
-    World::lightCount = 1;
+    World::lightCount = 2;
     World::lights = new Light[]
     {
-        Light(300.0, VECTOR3(0, 19, 0), FGS(1.0f)),
-        Light(200.0, VECTOR3(-19, 19, -19), FGS(1.0f)),
-        Light(200.0, VECTOR3(-19, 19,  19), FGS(1.0f)),
+        Light(2.0, VECTOR3(0, 19, 0), FGS(1.0f)),
+        Light(2.0, VECTOR3(-19, 19, -19), FGS(1.0f)),
+        Light(2.0, VECTOR3(-19, 0,  0), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19, -19), FGS(1.0f)),
         Light(200.0, VECTOR3(19,  19,  19), FGS(1.0f))
     };
 
     debugPrint("Translating camera");
     Camera::position = VECTOR3(0, 3, -10);
-    Camera::rotation = VECTOR3(RADIANS(-20.0f), RADIANS(40.0f), 0);
+    Camera::rotation = VECTOR3(RADIANS(-40.0f), RADIANS(40.0f), 0);
 
     Camera::position.x = sin(-Camera::rotation.y) * 10;
     Camera::position.z = -cos(-Camera::rotation.y) * 10;

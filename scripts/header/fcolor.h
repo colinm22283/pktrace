@@ -16,10 +16,12 @@ struct fcolor
     TRACER_FLOAT r, g, b, a;
 
     fcolor operator+(fcolor fc);
-    fcolor operator+=(fcolor fc);
+    void operator+=(fcolor fc);
     fcolor operator-(fcolor fc);
     fcolor operator*(TRACER_FLOAT x);
     fcolor operator*(fcolor fc);
+    void operator*=(TRACER_FLOAT x);
+    void operator*=(fcolor fc);
     fcolor operator/(TRACER_FLOAT x);
     fcolor operator/(fcolor fc);
 };

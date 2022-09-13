@@ -5,5 +5,5 @@
 void randomInit();
 
 TRACER_FLOAT randomRange();
-TRACER_FLOAT randomRange(double max);
-TRACER_FLOAT randomRange(double min, double max);
+TRACER_FLOAT randomRange(const double max);
+TRACER_FLOAT randomRange(const double min, const double max);
