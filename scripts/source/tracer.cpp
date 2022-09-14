@@ -1,6 +1,8 @@
 #include <thread>
 #include <iostream>
 
+#include <engine.h>
+
 #include <render/render.h>
 
 #include <misc/clamp.h>
@@ -8,6 +10,8 @@
 #include <tracer.h>
 #include <world.h>
 #include <camera.h>
+
+#include <post/post.h>
 
 #include <math/trig.h>
 #include <math/random.h>
@@ -35,24 +39,26 @@ TRACER_FLOAT Tracer::aspectRatio = (TRACER_FLOAT)TRACER_BUFFER_WIDTH / (TRACER_F
 TRACER_FLOAT Tracer::exposure = TRACER_EXPOSURE;
 TRACER_FLOAT Tracer::dynamicRange = DYNAMIC_RANGE;
 
-color** Tracer::pixelBuf;
+fcolor** Tracer::pixelBuf;
+
+double startTime = 0.0;
 
 void Tracer::init()
 {
     // init the pixel buffer
     instructions = new renderInstruction[Tracer::width * Tracer::height];
-    Tracer::pixelBuf = new color*[Tracer::width];
+    Tracer::pixelBuf = new fcolor*[Tracer::width];
     for (unsigned int x = 0; x < Tracer::width; x++)
     {
-        Tracer::pixelBuf[x] = new color[Tracer::height];
+        Tracer::pixelBuf[x] = new fcolor[Tracer::height];
 
         for (unsigned int y = 0; y < Tracer::height; y++)
         {
             uint8_t r = (TRACER_FLOAT)rand() / RAND_MAX * COLOR_RANDOMIZATION - (COLOR_RANDOMIZATION / 2);
-            Tracer::pixelBuf[x][y] = RGB(
+            Tracer::pixelBuf[x][y] = FRGB255(
                 (uint8_t)(DEFAULT_COLOR.r + r),
-                (uint8_t) (DEFAULT_COLOR.g + r),
-                (uint8_t) (DEFAULT_COLOR.b + r)
+                (uint8_t)(DEFAULT_COLOR.g + r),
+                (uint8_t)(DEFAULT_COLOR.b + r)
             );
         }
     }
@@ -77,8 +83,6 @@ void Tracer::init()
         instructions[current] = instructions[top];
         instructions[top] = temp;
     }
-
-    new std::thread(Tracer::update);
 }
 
 void Tracer::draw()
@@ -87,21 +91,21 @@ void Tracer::draw()
     {
         for (unsigned int y = 0; y < Tracer::height; y++)
         {
-            Render::drawPixel(x, Tracer::height - y - 1, Tracer::pixelBuf[x][y]);
+            Render::drawPixel(x, Tracer::height - y - 1, fcolorToColor(Tracer::pixelBuf[x][y]));
         }
     }
 }
 
 void Tracer::update()
 {
+    startTime = Engine::currentTime;
+
     for (unsigned int x = 0; x < Tracer::width; x++)
     {
-        Tracer::pixelBuf[x] = new color[Tracer::height];
-
         for (unsigned int y = 0; y < Tracer::height; y++)
         {
             uint8_t r = (TRACER_FLOAT)rand() / RAND_MAX * COLOR_RANDOMIZATION - (COLOR_RANDOMIZATION / 2);
-            Tracer::pixelBuf[x][y] = RGB(
+            Tracer::pixelBuf[x][y] = FRGB255(
                 (uint8_t)(DEFAULT_COLOR.r + r),
                 (uint8_t)(DEFAULT_COLOR.g + r),
                 (uint8_t)(DEFAULT_COLOR.b + r)
@@ -119,7 +123,15 @@ void Tracer::update()
 
     for (unsigned int i = 0; i < TRACER_THREADS; i++) threads[i]->join();
 
+    float timeTaken = (Engine::currentTime - startTime) / 1000.0;
+    std::cout << "Tracer time elapsed: " << std::to_string(timeTaken) << " seconds\n";
+
+    for (unsigned int i = 0; i < Post::effectCount; i++) Post::effects[i]->activate(Tracer::pixelBuf, Tracer::width, Tracer::height);
+
     ready = true;
+
+    timeTaken = (Engine::currentTime - startTime) / 1000.0;
+    std::cout << "Total time elapsed: " << std::to_string(timeTaken) << " seconds\n";
 }
 
 void Tracer::drawProgress()
@@ -143,7 +155,7 @@ void tracerThread()
             COS(yaw) * COS(pitch)
         ) };
 
-        Tracer::pixelBuf[inst.x][inst.y] = fcolorToColor(tracerRecur(r, 1) * FGS(Tracer::exposure) - FGS(Tracer::dynamicRange));
+        Tracer::pixelBuf[inst.x][inst.y] = tracerRecur(r, 1) * FGS(Tracer::exposure) - FGS(Tracer::dynamicRange);
     }
 }
 
@@ -189,43 +201,22 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
         for (unsigned int i = 0; i < INDIRECT_LIGHTING_RECURSIONS; i++) // TODO: reduce INDIRECT_LIGHTING_RECURSIONS based on roughness
         {
             // generate random angles
-//            TRACER_FLOAT theta0 = ASIN(randomRange(-0.3, 0.3));
-//            TRACER_FLOAT theta1 = ASIN(randomRange(-0.3, 0.3));
-            TRACER_FLOAT range = (1.0 - res.reflectivity) * M_PIf64 / 2;
-            TRACER_FLOAT theta0 = randomRange(-range, range);
-            TRACER_FLOAT theta1 = randomRange(-range, range);
+            TRACER_FLOAT range = (1.0 - res.reflectivity);
+//            TRACER_FLOAT range = M_PIf64 / 2;
+            TRACER_FLOAT theta0 = range * ASIN(randomRange(-1, 1));
+            TRACER_FLOAT theta1 = range * ASIN(randomRange(-1, 1));
 
-//            std::cout << "T0: " << theta0 << "\n";
-//            std::cout << "T1: " << theta1 << "\n";
-
-            vector3 normalNormalized = normalize(res.normal);
-
-            TRACER_FLOAT theta0cos = COS(theta0);
-            TRACER_FLOAT theta0sin = SIN(theta0);
-            TRACER_FLOAT theta1cos = COS(theta1);
-            TRACER_FLOAT theta1sin = SIN(theta1);
+            vector3 normalNormalized = normalize(res.result);
 
             vector2 angles = VECTOR2(
                     ATAN2(sqrtf64(powf64(normalNormalized.x, 2.0) + powf64(normalNormalized.z, 2.0)), normalNormalized.y) + theta0,
                     ATAN2(normalNormalized.z, normalNormalized.x) + theta1
             );
 
-//            vector3 rayDirPre = VECTOR3(
-//                (normalNormalized.x * theta0cos) + (normalNormalized.z * theta0sin),
-//                normalNormalized.y,
-//                (-normalNormalized.x * theta0sin) + (normalNormalized.z * theta0cos)
-//            );
-//
-//            vector3 rayDir = VECTOR3(
-//                    rayDirPre.x ,
-//                    (rayDirPre.y * theta0cos) - (rayDirPre.z * theta1sin),
-//                    (rayDirPre.y * theta1sin) + (rayDirPre.z * theta1cos)
-//            );
-
             vector3 rayDir = VECTOR3(
                 SIN(angles.x) * COS(angles.y),
-                SIN(angles.x) * SIN(angles.y),
-                COS(angles.x)
+                COS(angles.x),
+                SIN(angles.x) * SIN(angles.y)
             );
 
             // TODO: finish this shid
@@ -247,7 +238,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
 //    std::cout << "INDIRECT: (" << indirectLighting.r << ", " << indirectLighting.g << ", " << indirectLighting.b << ")\n";
 
     if (Tracer::indirectLighting) return (directLighting + indirectLighting) / 2 * res.col;
-    else  return directLighting * res.col;
+    else return directLighting * res.col;
 }
 
 #else

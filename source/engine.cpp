@@ -106,7 +106,8 @@ bool Engine::start()
     {
         if (Global::fpsLimit != 0)
         {
-            while ((double)(Engine::currentTime - prevTime) <= 1000.0 / Global::fpsLimit && !Engine::quit);
+            while ((double)(Engine::currentTime - prevTime) <= 1000.0 / Global::fpsLimit && !Engine::quit)
+            { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
         }
         Engine::deltaTime = Engine::currentTime - prevTime;
         prevTime = Engine::currentTime;

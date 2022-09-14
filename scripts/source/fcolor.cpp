@@ -8,10 +8,10 @@
 color fcolorToColor(fcolor fc)
 {
     return RGBA(
-        (uint8_t)CLAMP(fc.r * 255.0f, 0.0f, 255.0f),
-        (uint8_t)CLAMP(fc.g * 255.0f, 0.0f, 255.0f),
-        (uint8_t)CLAMP(fc.b * 255.0f, 0.0f, 255.0f),
-        (uint8_t)CLAMP(fc.a * 255.0f, 0.0f, 255.0f)
+        (uint8_t)CLAMP(fc.r * 255.0, 0.0, 254.9),
+        (uint8_t)CLAMP(fc.g * 255.0, 0.0, 254.9),
+        (uint8_t)CLAMP(fc.b * 255.0, 0.0, 254.9),
+        (uint8_t)CLAMP(fc.a * 255.0, 0.0, 254.9)
     );
 }
 fcolor colorToFColor(color c)

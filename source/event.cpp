@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <iostream>
+#include <thread>
 
 #include "script.h"
 #include "event.h"
@@ -20,6 +21,7 @@ void Event::init()
     while (!Engine::quit)
     {
         Event::update();
+        std::this_thread::sleep_for(std::chrono::nanoseconds(100));
     }
     debugPrint("Event thread killed at " << Engine::getTimeAsString().c_str());
 }

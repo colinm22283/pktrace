@@ -5,6 +5,8 @@
 
 #include <audio/synth.h>
 
+#if AUDIO_ENABLED
+
 track* Synth::sineWave(unsigned int frequency, unsigned int length)
 {
     unsigned char* data = new unsigned char[length / 1000 * AUDIO_FREQUENCY * AUDIO_CHANNELS];
@@ -22,3 +24,5 @@ track* Synth::sineWave(unsigned int frequency, unsigned int length)
         length / 1000 * AUDIO_FREQUENCY * AUDIO_CHANNELS
     };
 }
+
+#endif

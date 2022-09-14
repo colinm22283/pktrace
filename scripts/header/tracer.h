@@ -1,6 +1,6 @@
 #pragma once
 
-#include <render/color.h>
+#include <fcolor.h>
 #include <math/degRad.h>
 
 #include <tracerConfig.h>
@@ -17,7 +17,7 @@ namespace Tracer
     extern TRACER_FLOAT exposure;
     extern TRACER_FLOAT dynamicRange;
 
-    extern color** pixelBuf;
+    extern fcolor** pixelBuf;
 
     void init();
     void draw();
