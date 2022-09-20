@@ -16,7 +16,5 @@ struct collisionResult
     TRACER_FLOAT diffuse;
     fcolor col;
     TRACER_FLOAT transparency;
-    vector3 transparencyPos;
-    vector3 transparencyDir;
-    vector3 normal;
+    TRACER_FLOAT roughness;
 };
