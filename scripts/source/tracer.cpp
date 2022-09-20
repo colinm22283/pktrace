@@ -19,6 +19,10 @@
 
 #include <object/sphere.h>
 
+#if TRACER_PTHREAD_PRIORITIZE_THREADS
+    #include <pthread.h>
+#endif
+
 struct renderInstruction { int x; int y; };
 
 bool Tracer::ready = true;
@@ -45,6 +49,12 @@ double startTime = 0.0;
 
 void Tracer::init()
 {
+#if TRACER_THREADS
+    std::cout << "Running with " << TRACER_THREADS << " concurrent threads.\n";
+#else
+    std::cout << "Running with " << std::thread::hardware_concurrency() << " concurrent threads.\n";
+#endif
+
     // init the pixel buffer
     instructions = new renderInstruction[Tracer::width * Tracer::height];
     Tracer::pixelBuf = new fcolor*[Tracer::width];
@@ -116,12 +126,47 @@ void Tracer::update()
     ready = false;
     currentInstruction = 0;
 
+#if not TRACER_THREADS
+    unsigned int tracerThreads = std::thread::hardware_concurrency();
+#endif
+
+#if TRACER_THREADS
     std::thread* threads[TRACER_THREADS];
-    for (unsigned int i = 0; i < TRACER_THREADS; i++) threads[i] = new std::thread(tracerThread);
+    for (unsigned int i = 0; i < TRACER_THREADS; i++)
+    {
+        threads[i] = new std::thread(tracerThread);
 
-    while (currentInstruction < totalInstructions);
+#if TRACER_PTHREAD_PRIORITIZE_THREADS
 
+        sched_param* params = new sched_param { .sched_priority = 100 };
+
+        pthread_setschedparam(threads[i]->native_handle(), SCHED_FIFO, params);
+
+#endif
+    }
+#else
+    std::thread* threads[tracerThreads];
+    for (unsigned int i = 0; i < tracerThreads; i++)
+    {
+        threads[i] = new std::thread(tracerThread);
+
+#if TRACER_PTHREAD_PRIORITIZE_THREADS
+
+        sched_param* params = new sched_param { .sched_priority = 100 };
+
+        pthread_setschedparam(threads[i]->native_handle(), SCHED_FIFO, params);
+
+#endif
+    }
+#endif
+
+    while (currentInstruction < totalInstructions) std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+#if TRACER_THREADS
     for (unsigned int i = 0; i < TRACER_THREADS; i++) threads[i]->join();
+#else
+    for (unsigned int i = 0; i < tracerThreads; i++) threads[i]->join();
+#endif
 
     float timeTaken = (Engine::currentTime - startTime) / 1000.0;
     std::cout << "Tracer time elapsed: " << std::to_string(timeTaken) << " seconds\n";
@@ -219,7 +264,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
                 SIN(angles.x) * SIN(angles.y)
             );
 
-            // TODO: finish this shid
+            // TODO: finish this
 
             indirectLighting +=
                 tracerRecur(
@@ -233,9 +278,6 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
 
         indirectLighting = indirectLighting / INDIRECT_LIGHTING_RECURSIONS; // TODO: implement /=
     }
-
-//    std::cout << "DIRECT: (" << directLighting.r << ", " << directLighting.g << ", " << directLighting.b << ")\n";
-//    std::cout << "INDIRECT: (" << indirectLighting.r << ", " << indirectLighting.g << ", " << indirectLighting.b << ")\n";
 
     if (Tracer::indirectLighting) return (directLighting + indirectLighting) / 2 * res.col;
     else return directLighting * res.col;
