@@ -38,9 +38,6 @@ Texture* floorTexture;
 
 void Script::start()
 {
-//    Noise1D noise(1000);
-//    for (unsigned int i = 0; i < 1000; i++) std::cout << "Noise: " << noise.getValue((double)i) << "\n";
-
     Global::fpsLimit = 100000;
     Global::fpsOutput = false;
 
@@ -59,8 +56,8 @@ void Script::start()
     floorTexture = new Texture("textures/tile.bmp", 3.0);
 
     debugPrint("Generating materials");
-    Material* steelMat = new Material(0.3, 0.0, 0.2, 1.0);
-    Material* mirrorMat = new Material(0.5, 0.0, 0.05, 1.0);
+    Material* steelMat = new Material(0.5, 0.0, 0.5, 1.0);
+    Material* mirrorMat = new Material(1.0, 0.0, 0.0, 1.0);
     Material* woodMat = new Material(0.05, 0.0, 0.95, 1.0);
     Material* tileMat = new Material(0.0, 0.0, 0.9, 1.0);
     Material* glassMat = new Material(0.9, 0.0, 0.2, 0.2);
@@ -109,17 +106,25 @@ void Script::start()
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), redTexture, steelMat) // center sphere
     };
     debugPrint("Generating lights");
-    World::lightCount = 1;
-    World::lights = new Light[]
+    World::lightCount = 40;
+//    World::lights = new Light[]
+//    {
+//        Light(4.0, VECTOR3(-10, 19, -10), FGS(1.0)),
+//        Light(2.0, VECTOR3(-19, 19, -19), FGS(1.0)),
+//        Light(2.0, VECTOR3(-19, 0,  0), FGS(1.0)),
+//        Light(200.0, VECTOR3(19,  19, -19), FGS(1.0)),
+//        Light(200.0, VECTOR3(19,  19,  19), FGS(1.0))
+//    };
+    World::lights = new Light[World::lightCount];
+    for (int i = 0; i < World::lightCount; i++)
     {
-        Light(4.0, VECTOR3(0, 19, 0), FGS(1.0f)),
-        Light(2.0, VECTOR3(-19, 19, -19), FGS(1.0f)),
-        Light(2.0, VECTOR3(-19, 0,  0), FGS(1.0f)),
-        Light(200.0, VECTOR3(19,  19, -19), FGS(1.0f)),
-        Light(200.0, VECTOR3(19,  19,  19), FGS(1.0f))
-    };
+        TRACER_FLOAT angle = (TRACER_FLOAT)i / World::lightCount * 2 * M_PIf64;
+
+        World::lights[i] = Light(0.075, VECTOR3(cosf64(angle) * 19.0, 19.0, sinf64(angle) * 19.0), FGS(1.0));
+    }
+
     debugPrint("Generating post effects");
-    Post::effectCount = 1;
+    Post::effectCount = 0;
     Post::effects = new PostEffect*[]
     {
         (PostEffect*)new AdjacentAverage(1),
