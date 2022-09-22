@@ -29,3 +29,21 @@ collisionResult World::raycast(ray r)
 
     return res;
 }
+collisionResult World::raycast(ray r, Object* objectMask)
+{
+    collisionResult res = World::objects[0]->checkCollision(r);
+
+    for (unsigned int i = 1; i < World::objectCount; i++)
+    {
+        if (World::objects[i] != objectMask)
+        {
+            collisionResult tempRes = World::objects[i]->checkCollision(r);
+            if (tempRes.hit)
+            {
+                if (!res.hit || tempRes.distance < res.distance) res = tempRes;
+            }
+        }
+    }
+
+    return res;
+}
