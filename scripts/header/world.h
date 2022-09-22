@@ -14,5 +14,6 @@ namespace World
     void cleanup();
 
     collisionResult raycast(ray r);
-    collisionResult raycast(ray r, Object* objectMask);
+    collisionResult raycast(ray r, Object* maskObject);
+    collisionResult raycast(ray r, Object** maskObjects, int maskCount);
 }
