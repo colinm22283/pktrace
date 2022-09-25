@@ -103,7 +103,8 @@ void Script::start()
             woodHorizontalTexture,
             tileMat
         ),
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), redTexture, steelMat) // center sphere
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, steelMat), // center sphere
+        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(-1, 0, 0), blankTexture, tileMat)
     };
     debugPrint("Generating lights");
     World::lightCount = 40;

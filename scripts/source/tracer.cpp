@@ -34,6 +34,7 @@ renderInstruction* instructions;
 
 void tracerThread();
 fcolor tracerRecur(ray r, unsigned int currentIteration);
+fcolor tracerRecur(ray r, unsigned int currentIteration, Object* mask);
 TRACER_FLOAT lightMult(TRACER_FLOAT distance);
 
 unsigned int Tracer::width = TRACER_BUFFER_WIDTH;
@@ -212,6 +213,81 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
     if (currentIteration > REFLECTION_RECURSION_LIMIT) return FGS(0);
 
     collisionResult res = World::raycast(r);
+
+    if (!res.hit) return SKYBOX_COLOR;
+
+    // CALCULATE DIRECT LIGHTING
+    fcolor directLighting = FGS(0.0);
+    for (int i = 0; i < World::lightCount; i++)
+    {
+        // calc light vectors
+        vector3 lightDisplacement = World::lights[i].position - res.position;
+        TRACER_FLOAT lightMagnitude = magnitude(lightDisplacement);
+        vector3 lightNormalized = lightDisplacement / lightMagnitude;
+
+        // cast a ray towards the light
+        collisionResult lightRes = World::raycast((ray){
+                res.position + (lightNormalized * NEAR_CLIPPING_DISTANCE),
+                lightNormalized
+        });
+
+        // check if ray reached the light
+        if (!lightRes.hit || lightRes.distance > lightMagnitude)
+        {
+            directLighting +=
+                    World::lights[i].col * //                  light color
+                    World::lights[i].intensity * //            light intensity
+                    lightMult(lightMagnitude); //      light distance
+        }
+    }
+
+    fcolor indirectLighting = FGS(0.0);
+    if (Tracer::indirectLighting)
+    {
+        for (unsigned int i = 0; i < INDIRECT_LIGHTING_RECURSIONS; i++) // TODO: reduce INDIRECT_LIGHTING_RECURSIONS based on roughness
+        {
+            // generate random angles
+            TRACER_FLOAT range = (1.0 - res.reflectivity);
+//            TRACER_FLOAT range = M_PIf64 / 2;
+            TRACER_FLOAT theta0 = range * ASIN(randomRange(-1, 1));
+            TRACER_FLOAT theta1 = range * ASIN(randomRange(-1, 1));
+
+            vector3 normalNormalized = normalize(res.result);
+
+            vector2 angles = VECTOR2(
+                    ATAN2(sqrtf64(powf64(normalNormalized.x, 2.0) + powf64(normalNormalized.z, 2.0)), normalNormalized.y) + theta0,
+                    ATAN2(normalNormalized.z, normalNormalized.x) + theta1
+            );
+
+            vector3 rayDir = VECTOR3(
+                    SIN(angles.x) * COS(angles.y),
+                    COS(angles.x),
+                    SIN(angles.x) * SIN(angles.y)
+            );
+
+            // TODO: finish this
+
+            indirectLighting +=
+                    tracerRecur(
+                            (ray){
+                                    res.position + (normalNormalized * NEAR_CLIPPING_DISTANCE),
+                                    rayDir
+                            },
+                            currentIteration + 1
+                    ); //              raycast value
+        }
+
+        indirectLighting = indirectLighting / INDIRECT_LIGHTING_RECURSIONS; // TODO: implement /=
+    }
+
+    if (Tracer::indirectLighting) return (directLighting + indirectLighting) / 2 * res.col;
+    else return directLighting * res.col;
+}
+fcolor tracerRecur(ray r, unsigned int currentIteration, Object* mask)
+{
+    if (currentIteration > REFLECTION_RECURSION_LIMIT) return FGS(0);
+
+    collisionResult res = World::raycast(r, mask);
 
     if (!res.hit) return SKYBOX_COLOR;
 
