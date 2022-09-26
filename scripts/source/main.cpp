@@ -64,7 +64,7 @@ void Script::start()
     Material* matteMat = new Material(0.0, 0.0, 1.0, 1.0);
 
     debugPrint("Generating object");
-    World::objectCount = 7;
+    World::objectCount = 9;
     World::objects = new Object*[]
     {
         (Object*)new Sphere( // floor
@@ -104,7 +104,8 @@ void Script::start()
             tileMat
         ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, steelMat), // center sphere
-        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(-1, 0, 0), blankTexture, tileMat)
+        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
+//        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
     };
     debugPrint("Generating lights");
     World::lightCount = 40;

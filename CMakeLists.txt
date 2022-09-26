@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH /usr/share/cmake-3.22/Modules)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/)
 
-message(STATUS "Build type: ${MAKE_BUILD_TYPE}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug)
     add_definitions(-DPEAK_ENGINE_DEBUG_MODE=1)
