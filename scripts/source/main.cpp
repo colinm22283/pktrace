@@ -64,7 +64,7 @@ void Script::start()
     Material* matteMat = new Material(0.0, 0.0, 1.0, 1.0);
 
     debugPrint("Generating object");
-    World::objectCount = 9;
+    World::objectCount = 6;
     World::objects = new Object*[]
     {
         (Object*)new Sphere( // floor
@@ -97,18 +97,18 @@ void Script::start()
             woodHorizontalTexture,
             tileMat
         ),
-        (Object*)new Sphere( // right wall
-            1000000,
-            VECTOR3(1000020, 0, 0),
-            woodHorizontalTexture,
-            tileMat
-        ),
+//        (Object*)new Sphere( // right wall
+//            1000000,
+//            VECTOR3(1000020, 0, 0),
+//            woodHorizontalTexture,
+//            tileMat
+//        ),
         (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, steelMat), // center sphere
-        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
+//        (Object*)new Plane(VECTOR3(5, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
 //        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
     };
     debugPrint("Generating lights");
-    World::lightCount = 40;
+    World::lightCount = 41;
 //    World::lights = new Light[]
 //    {
 //        Light(4.0, VECTOR3(-10, 19, -10), FGS(1.0)),
@@ -124,6 +124,8 @@ void Script::start()
 
         World::lights[i] = Light(0.075, VECTOR3(cosf64(angle) * 19.0, 19.0, sinf64(angle) * 19.0), FGS(1.0));
     }
+
+    World::lights[40] = Light(100, VECTOR3(1000, 0, 0), FGS(1.0));
 
     debugPrint("Generating post effects");
     Post::effectCount = 0;
@@ -145,8 +147,8 @@ void Script::start()
     };
 
     debugPrint("Translating camera");
-    Camera::position = VECTOR3(0, 7, -10);
-    Camera::rotation = VECTOR3(RADIANS(-40.0f), RADIANS(70.0f), 0);
+    Camera::position = VECTOR3(0, 4, -10);
+    Camera::rotation = VECTOR3(RADIANS(-10.0f), RADIANS(70.0f), 0);
 
     Camera::position.x = sin(-Camera::rotation.y) * 10;
     Camera::position.z = -cos(-Camera::rotation.y) * 10;
