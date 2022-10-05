@@ -218,6 +218,8 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
 
     // CALCULATE DIRECT LIGHTING
     fcolor directLighting = FGS(0.0);
+
+#if DIRECT_LIGHTING
     for (int i = 0; i < World::lightCount; i++)
     {
         // calc light vectors
@@ -240,6 +242,7 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
                     lightMult(lightMagnitude); //      light distance
         }
     }
+#endif
 
     fcolor indirectLighting = FGS(0.0);
     if (Tracer::indirectLighting)
