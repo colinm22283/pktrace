@@ -20,7 +20,7 @@ message(STATUS ${CMAKE_MODULE_PATH})
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-find_package(SDL2_TTF REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 include_directories(${SDL2_TTF_INCLUDE_DIRS})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

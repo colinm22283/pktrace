@@ -34,6 +34,7 @@ Texture* greenTexture;
 Texture* blueTexture;
 Texture* steelTexture;
 Texture* woodHorizontalTexture;
+Texture* woodTexture;
 Texture* floorTexture;
 
 void Script::start()
@@ -53,14 +54,15 @@ void Script::start()
     blueTexture = new Texture("textures/blue.bmp");
     steelTexture = new Texture("textures/steel2.bmp", 0.9);
     woodHorizontalTexture = new Texture("textures/woodHorizontal.bmp", 400000.0);
+    woodTexture = new Texture("textures/woodHorizontal.bmp", 4.0);
     floorTexture = new Texture("textures/tile.bmp", 3.0);
 
     debugPrint("Generating materials");
-    Material* steelMat = new Material(0.5, 0.0, 0.5, 1.0);
+    Material* steelMat = new Material(0.3, 0.0, 0.0, 0.3);
     Material* mirrorMat = new Material(1.0, 0.0, 0.0, 1.0);
     Material* woodMat = new Material(0.05, 0.0, 0.95, 1.0);
-    Material* tileMat = new Material(0.0, 0.0, 0.9, 1.0);
-    Material* glassMat = new Material(0.9, 0.0, 0.2, 0.2);
+    Material* tileMat = new Material(0.0, 0.0, 0.0, 1.0);
+    Material* glassMat = new Material(0.0, 0.0, 0.0, 0.0);
     Material* matteMat = new Material(0.0, 0.0, 1.0, 1.0);
 
     debugPrint("Generating object");
@@ -103,7 +105,7 @@ void Script::start()
             woodHorizontalTexture,
             tileMat
         ),
-        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, steelMat), // center sphere
+        (Object*)new Sphere(2, VECTOR3(0, 0, 0), blankTexture, glassMat), // center sphere
 //        (Object*)new Plane(VECTOR3(5, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
 //        (Object*)new Plane(VECTOR3(10, 0, 0), VECTOR3(1, 0, 0), blankTexture, mirrorMat)
     };
@@ -111,7 +113,7 @@ void Script::start()
     World::lightCount = 40;
 //    World::lights = new Light[]
 //    {
-//        Light(4.0, VECTOR3(-10, 19, -10), FGS(1.0)),
+//        Light(3.0, VECTOR3(0, 10, 0), FGS(1.0)),
 //        Light(2.0, VECTOR3(-19, 19, -19), FGS(1.0)),
 //        Light(2.0, VECTOR3(-19, 0,  0), FGS(1.0)),
 //        Light(200.0, VECTOR3(19,  19, -19), FGS(1.0)),

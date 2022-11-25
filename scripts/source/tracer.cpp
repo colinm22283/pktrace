@@ -27,6 +27,7 @@ struct renderInstruction { int x; int y; };
 
 bool Tracer::ready = true;
 bool Tracer::indirectLighting = INDIRECT_LIGHTING;
+bool Tracer::transparency = TRANSPARENCY;
 
 unsigned int currentInstruction;
 unsigned int totalInstructions;
@@ -283,8 +284,34 @@ fcolor tracerRecur(ray r, unsigned int currentIteration)
         indirectLighting = indirectLighting / INDIRECT_LIGHTING_RECURSIONS; // TODO: implement /=
     }
 
-    if (Tracer::indirectLighting) return (directLighting + indirectLighting) / 2 * res.col;
-    else return directLighting * res.col;
+    fcolor transparencyLighting = FGS(0.0);
+    if (Tracer::transparency)
+    {
+        if (res.transparency > 0)
+        {
+            transparencyLighting += tracerRecur(
+                (ray){
+                        res.position + (res.result * -NEAR_CLIPPING_DISTANCE),
+                        res.result * -1
+                },
+                currentIteration + 1
+            );
+        }
+    }
+
+    directLighting *= (1.0 - res.transparency);
+    indirectLighting *= (1.0 - res.transparency);
+
+    fcolor sum = directLighting;
+    if (Tracer::indirectLighting) sum += indirectLighting;
+    if (Tracer::transparency) sum += transparencyLighting;
+    return sum / (
+#if DIRECT_LIGHTING
+            (1.0 - res.transparency) +
+#endif
+            (Tracer::indirectLighting ? (1.0 - res.transparency) : 0.0) +
+            (Tracer::transparency ? 1 : 0.0)
+    ) * res.col;
 }
 fcolor tracerRecur(ray r, unsigned int currentIteration, Object* mask)
 {
@@ -358,8 +385,39 @@ fcolor tracerRecur(ray r, unsigned int currentIteration, Object* mask)
         indirectLighting = indirectLighting / INDIRECT_LIGHTING_RECURSIONS; // TODO: implement /=
     }
 
-    if (Tracer::indirectLighting) return (directLighting + indirectLighting) / 2 * res.col;
-    else return directLighting * res.col;
+    fcolor transparencyLighting = FGS(0.0);
+    if (Tracer::transparency)
+    {
+        if (res.transparency > 0)
+        {
+            transparencyLighting += tracerRecur(
+                (ray){
+                    res.position + (res.transparencyResult * NEAR_CLIPPING_DISTANCE),
+                    res.transparencyResult
+                },
+                currentIteration + 1
+            );
+        }
+    }
+
+    directLighting *= (1.0 - res.transparency);
+    indirectLighting *= (1.0 - res.transparency);
+    transparencyLighting *= res.transparency;
+
+#if DIRECT_LIGHTING
+    fcolor sum = directLighting;
+#else
+    fcolor sum = FGS(0.0);
+#endif
+    if (Tracer::indirectLighting) sum += indirectLighting;
+    if (Tracer::transparency) sum += transparencyLighting;
+    return sum / (
+#if DIRECT_LIGHTING
+        1 +
+#endif
+        (Tracer::indirectLighting ? 1 : 0) +
+        (Tracer::transparency ? 1 : 0)
+    ) * res.col;
 }
 
 #else

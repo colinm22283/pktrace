@@ -9,6 +9,7 @@ namespace Tracer
 {
     extern bool ready;
     extern bool indirectLighting;
+    extern bool transparency;
 
     extern unsigned int width;
     extern unsigned int height;

@@ -5,6 +5,7 @@
 
 #include <math/trig.h>
 #include <math/random.h>
+#include <misc/abs.h>
 
 #include <camera.h>
 
@@ -44,8 +45,22 @@ collisionResult Sphere::checkCollision(ray r)
         t1 = c / q;
     }
 
-    TRACER_FLOAT t = MIN(t0, t1);
-    TRACER_FLOAT t2 = MAX(t0, t1);
+    TRACER_FLOAT t;
+    TRACER_FLOAT t2;
+
+    if (t0 < 0)
+    {
+        t = t1;
+    }
+    else if (t1 < 0)
+    {
+        t = t0;
+    }
+    else
+    {
+        t = MIN(t0, t1);
+//        t2 = MAX(t0, t1);
+    }
 
     if (t < 0)
     {
@@ -71,6 +86,6 @@ collisionResult Sphere::checkCollision(ray r)
         material->diffuse * material->opacity,
         colorToFColor(tex->getPixel((int)(yaw * tex->scale * 100.0), (int)(pitch * tex->scale * 100.0))),
         1.0 - material->opacity,
-        material->roughness
+        normalize(r.direction - (normal * (0.5 * dotProd(r.direction, normal)))) * -1
     };
 }
