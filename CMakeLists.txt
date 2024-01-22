@@ -3,7 +3,7 @@ project(PeaKTrace)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_MODULE_PATH /usr/share/cmake-3.22/Modules)
+set(CMAKE_MODULE_PATH /usr/share/cmake/Modules)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/)
 
@@ -20,8 +20,8 @@ message(STATUS ${CMAKE_MODULE_PATH})
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-find_package(SDL2TTF REQUIRED)
-include_directories(${SDL2TTF_INCLUDE_DIR})
+find_package(SDL2_ttf REQUIRED)
+include_directories(${SDL2_TTF_INCLUDE_DIR})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -42,4 +42,4 @@ endif()
 
 add_executable(PeaKTrace ${PeaKTrace_SOURCES})
 
-target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARY} Threads::Threads)
+target_link_libraries(PeaKTrace ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} Threads::Threads)
